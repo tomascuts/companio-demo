@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar, List, ListItem, ListItemText, Typography, Rating } from '@mui/material';
 
-const ProviderList = ({ providers }) => (
+const ProviderList = ({ providers, handleProviderSelect }) => (
   <List>
-    {providers?.map((provider, index) => (
-      <ListItem key={index} sx={{ backgroundColor: 'white', borderRadius: '10px', mb: 1 }}>
+    {providers?.map((provider) => (
+      <ListItem key={provider.id} sx={{ backgroundColor: 'white', borderRadius: '10px', mb: 1 }} button onClick={() => handleProviderSelect(provider)}>
         <Avatar sx={{ mr: 2 }}>{provider.name[0]}</Avatar>
         <ListItemText 
           primary={provider.name} 

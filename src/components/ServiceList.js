@@ -2,15 +2,6 @@ import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/mat
 import { styled } from '@mui/material/styles';
 import ServiceItem from './ServiceItem';
 
-// const ServiceItem = styled(ListItem)(({ theme }) => ({
-//   backgroundColor: '#FFFFFF',
-//   borderRadius: 10,
-//   marginBottom: theme.spacing(1),
-//   '&:last-child': {
-//     marginBottom: 0,
-//   },
-// }));
-
 const ServiceList = ({ filteredServices, handleServiceSelect }) => {
   return (
     filteredServices.length != 0 ?

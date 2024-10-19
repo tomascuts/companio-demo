@@ -8,10 +8,22 @@ export const services = [
     detailedDescription: 'El servicio incluye acompañamiento desde la casa hasta el supermercado deseado, ayuda con la selección de productos y su transporte hasta el domicilio de vuelta.',
     icon: <ShoppingCart />,
     providers: [
-      { name: 'Fernando López', location: 'San Isidro - 24 años', occupation: 'Amante de las mascotas', rating: 4.5 },
+      { 
+        id: 1,
+        name: 'Fernando López', 
+        location: 'San Isidro - 25 años', 
+        occupation: 'Amante de las mascotas', 
+        rating: 4.5,
+        description: 'Ofrezco servicios de cuidado y asistencia para garantizar su bienestar. Me dedico a asegurar que cada animal reciba la atención y el cariño que merece.',
+        services: ['Supermercado', 'Acompañamiento', 'Mascotas'],
+        reviews: [
+          { author: 'María Smith', age: 80, rating: 4.5, comment: 'Hermosa persona' },
+          { author: 'Elisa Ruiz', age: 87, rating: 4.0, comment: 'Amable' },
+        ]
+      },
       { name: 'Amadeo Nonso', location: 'San Fernando - 28 años', occupation: 'Estudiante de medicina', rating: 4.1 },
-      { name: 'Florencia Sirten', location: 'Martinez - 20 años', occupation: 'Empleada en supermercado', rating: 4.0 },
-      { name: 'Camila Martinez', location: 'Olivos - 26 años', occupation: 'Profesora de educación física', rating: 3.5 },
+      { name: 'Florencia Sirten', location: 'Martinez - 20 años', occupation: 'Empleada', rating: 4.0 },
+      { name: 'Camila Martinez', location: 'Olivos - 26 años', occupation: 'Profesora', rating: 3.5 },
     ]
   },
   { 
