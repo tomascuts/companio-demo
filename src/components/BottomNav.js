@@ -1,5 +1,5 @@
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { Home, Favorite, List as ListIcon } from '@mui/icons-material';
+import { List as ListIcon, Home, Favorite } from '@mui/icons-material';
 
 const BottomNav = ({ value, setValue }) => {
   return (
@@ -19,6 +19,3 @@ const BottomNav = ({ value, setValue }) => {
 };
 
 export default BottomNav;
-
-
-//footer
