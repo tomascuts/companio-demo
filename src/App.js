@@ -52,24 +52,7 @@ function App() {
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
         <div style={{ padding: '16px', flex: 1, overflow: 'auto' }}>
-          {!selectedService && !selectedProvider ? (
-            <>
-              <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
-              <ServiceList filteredServices={filteredServices} handleServiceSelect={handleServiceSelect} />
-            </>
-          ) : selectedService && !selectedProvider ? (
-            <>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                {selectedService.detailedDescription}
-              </Typography>
-              <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                Resultados de asistentes cerca de su zona
-              </Typography>
-              <ProviderList providers={selectedService.providers} handleProviderSelect={handleProviderSelect} />
-            </>
-          ) : (
-            <DetailedViewProvider selectedProvider={selectedProvider}/>
-          )}          
+         
         </div>
         <BottomNav value={value} setValue={setValue} />
       </div>
