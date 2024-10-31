@@ -16,7 +16,7 @@ function App() {
   const [filteredServices, setFilteredServices] = useState(services);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
-
+   
   useEffect(() => {
     const results = services.filter(service =>
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
