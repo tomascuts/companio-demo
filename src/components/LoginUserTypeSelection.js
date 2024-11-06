@@ -11,8 +11,8 @@ export default function LoginUserTypeSelection({ userName, handleUserTypeSelect 
       
       <Box display="flex" flexDirection="column" gap={4} mt={4}>
         {[
-          { type: 'asistido', label: 'Prefiero ser asistido', color: 'primary' },
-          { type: 'asistir', label: 'Prefiero asistir', color: 'secondary' }
+          { type: 'asistido', label: 'Prefiero ser asistido', color: 'primary', avatar: '/avatar-asistido.avif' },
+          { type: 'asistir', label: 'Prefiero asistir', color: 'secondary', avatar: '/avatar-asistir.webp' }
         ].map((option) => (
           <Box 
             key={option.type}
@@ -29,7 +29,7 @@ export default function LoginUserTypeSelection({ userName, handleUserTypeSelect 
               overflow="hidden"
             >
               <img
-                src={`/placeholder.svg?height=128&width=128`}
+                src={option.avatar}
                 alt={option.label}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />

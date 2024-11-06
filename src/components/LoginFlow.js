@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect  } from 'react'
 import { ThemeProvider, createTheme, Box, Container } from '@mui/material'
 import LoginForm from './LoginForm.js'
 import LoginInitialSteps from './LoginInitialSteps.js'
@@ -17,7 +17,7 @@ const theme = createTheme({
   },
 });
 
-export default function LoginFlow() {
+const LoginFlow = ({ onLogin }) => {
   const [step, setStep] = useState(1)
   const [isLogin, setIsLogin] = useState(false)
   const [formData, setFormData] = useState({
@@ -75,6 +75,16 @@ export default function LoginFlow() {
     setStep(5)
   }
 
+  useEffect(() => {
+    if (step === 5) {
+      const timer = setTimeout(() => {
+        onLogin(); 
+      }, 4000);
+
+      return () => clearTimeout(timer); 
+    }
+  }, [step, onLogin]);
+
   return (
     <ThemeProvider theme={theme}>
       <Box minHeight="100vh" bgcolor="cyan.50">
@@ -114,4 +124,6 @@ export default function LoginFlow() {
       </Box>
     </ThemeProvider>
   )
-}
+};
+
+export default LoginFlow;

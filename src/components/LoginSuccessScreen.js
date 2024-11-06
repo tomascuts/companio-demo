@@ -32,18 +32,14 @@ export default function LoginSuccessScreen() {
         width="100%" 
         height="160px" 
         bgcolor="pink.200" 
-        borderTopRightRadius="100%"
       />
       <Box position="relative" zIndex={1}>
         <Typography variant="h4" fontWeight="bold" mb={2}>¡Está todo listo!</Typography>
         <Typography variant="h6" mb={3}>Bienvenido a</Typography>
         <Box mb={3}>
           <Box bgcolor="pink.200" borderRadius="50%" p={2} display="inline-block">
-            <HandshakeIcon sx={{ fontSize: 48, color: 'primary.main' }} />
+          <img src="/logo-marca-sf.svg" alt="Logo" width="364" height="364" />
           </Box>
-          <Typography variant="h6" color="primary.main" fontWeight="bold" mt={1}>
-            COMPANIO
-          </Typography>
         </Box>
         <Typography variant="h5" fontWeight="bold">¡Empecemos!</Typography>
       </Box>
