@@ -6,7 +6,7 @@ import ServiceList from './components/ServiceList';
 import BottomNav from './components/BottomNav';
 import ProviderList from './components/ProviderList';
 import DetailedViewProvider from './components/DetailedViewProvider';
-import LoginScreen from './components/LoginScreen';
+import LoginFlow from './components/LoginFlow';
 
 import theme from './styles/theme';
 import { services } from './data/servicesData';
@@ -81,7 +81,7 @@ function App() {
           <BottomNav value={value} setValue={setValue} />
         </div>
       ) : (
-        <LoginScreen onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
+        <LoginFlow onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
       )}
     </ThemeProvider>
   );
