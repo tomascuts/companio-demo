@@ -1,16 +1,15 @@
-'use client'
-
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { HandshakeIcon, XCircle, ArrowLeft } from "lucide-react"
+import { HandshakeIcon, XCircle, ArrowLeft, Heart } from "lucide-react"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
-export default function Component() {
+export default function login() {
   const [step, setStep] = useState(1)
+  const [isLogin, setIsLogin] = useState(false)
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
@@ -24,7 +23,12 @@ export default function Component() {
     actividades: '',
     nivelActividad: '',
     tieneEnfermedad: '',
-    enfermedad: ''
+    enfermedad: '',
+    tareasAsistencia: []
+  })
+  const [loginData, setLoginData] = useState({
+    email: '',
+    contrasena: ''
   })
   const [userName, setUserName] = useState('')
 
@@ -38,6 +42,20 @@ export default function Component() {
     }
   }
 
+  const handleLoginInputChange = (e) => {
+    setLoginData({
+      ...loginData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault()
+    console.log('Login submitted:', loginData)
+    // Here you would typically handle the login logic
+    setStep(3)
+  }
+
   const handleUserTypeSelect = (type) => {
     setFormData({ ...formData, userType: type })
     setStep(4)
@@ -47,6 +65,91 @@ export default function Component() {
     console.log('Form submitted:', formData)
     setStep(5)
   }
+
+  const renderLoginForm = () => (
+    <div className="min-h-screen bg-cyan-50 flex flex-col items-center pt-12 px-6">
+      <div className="w-full max-w-md space-y-8">
+        <div className="flex flex-col items-center">
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0">
+              <Heart className="w-16 h-16 text-pink-500 fill-pink-500" />
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <HandshakeIcon className="w-8 h-8 text-white" />
+            </div>
+          </div>
+          <p className="mt-2 text-pink-700 font-semibold">COMPANIO</p>
+        </div>
+
+        <div className="space-y-6">
+          <h1 className="text-2xl font-bold text-center">Iniciá sesión</h1>
+          
+          <form onSubmit={handleLoginSubmit} className="space-y-4">
+            <div className="relative">
+              <Input
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={loginData.email}
+                onChange={handleLoginInputChange}
+                className="bg-white pr-10"
+              />
+              {loginData.email && (
+                <button
+                  type="button"
+                  onClick={() => setLoginData({ ...loginData, email: '' })}
+                  className="absolute right-3 top-2.5"
+                >
+                  <XCircle className="h-5 w-5 text-gray-400" />
+                </button>
+              )}
+            </div>
+
+            <div className="relative">
+              <Input
+                name="contrasena"
+                type="password"
+                placeholder="Contraseña"
+                value={loginData.contrasena}
+                onChange={handleLoginInputChange}
+                className="bg-white pr-10"
+              />
+              {loginData.contrasena && (
+                <button
+                  type="button"
+                  onClick={() => setLoginData({ ...loginData, contrasena: '' })}
+                  className="absolute right-3 top-2.5"
+                >
+                  <XCircle className="h-5 w-5 text-gray-400" />
+                </button>
+              )}
+            </div>
+
+            <Button 
+              type="submit"
+              className="w-full bg-teal-600 hover:bg-teal-700 text-white"
+            >
+              Iniciar sesión
+            </Button>
+          </form>
+
+          <p className="text-center text-sm">
+            No tienes cuenta?{" "}
+            <Button
+              variant="link"
+              className="text-pink-700 p-0"
+              onClick={() => {
+                setIsLogin(false)
+                setStep(1)
+              }}
+            >
+              Creá tu cuenta
+            </Button>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
 
   const renderInitialSteps = () => (
     <Card className="bg-white/80 backdrop-blur-sm">
@@ -72,6 +175,7 @@ export default function Component() {
               <Button 
                 variant="secondary"
                 className="w-full bg-teal-100 text-teal-700 hover:bg-teal-200"
+                onClick={() => setIsLogin(true)}
               >
                 Inicia sesión
               </Button>
@@ -141,7 +245,11 @@ export default function Component() {
 
             <p className="text-center text-sm text-pink-900">
               Ya tienes cuenta?{" "}
-              <Button variant="link" className="text-pink-700 p-0">
+              <Button
+                variant="link"
+                className="text-pink-700 p-0"
+                onClick={() => setIsLogin(true)}
+              >
                 Sign in
               </Button>
             </p>
@@ -150,8 +258,8 @@ export default function Component() {
       </CardContent>
     </Card>
   )
-
-  const renderUserTypeSelection = () => (
+  
+    const renderUserTypeSelection = () => (
     <div className="text-center space-y-8 p-4">
       <h1 className="text-3xl font-bold">¡Hola {userName || 'Usuario'}!</h1>
       <p className="text-gray-600">¿Prefieres recibir ayuda o ser quien la ofrece?</p>
@@ -170,7 +278,6 @@ export default function Component() {
           </div>
           <p className="text-blue-600">Prefiero ser asistido</p>
         </button>
-
         <button
           onClick={() => handleUserTypeSelect('asistir')}
           className="w-full space-y-2"
@@ -187,7 +294,6 @@ export default function Component() {
       </div>
     </div>
   )
-
   const renderInfoForm = () => (
     <div className="space-y-6 p-4">
       <div className="flex items-center gap-4">
@@ -201,7 +307,6 @@ export default function Component() {
         </Button>
         <h1 className="text-2xl font-bold">¡Queremos conocerte mejor, {userName || 'Usuario'}!</h1>
       </div>
-
       <div className="space-y-6">
         <div>
           <h2 className="text-sm font-medium text-gray-500 mb-4">INFORMACIÓN:</h2>
@@ -216,7 +321,6 @@ export default function Component() {
               />
               <XCircle className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
-
             <div className="relative">
               <Input
                 name="fechaNacimiento"
@@ -228,7 +332,6 @@ export default function Component() {
               />
               <XCircle className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
-
             <div className="relative">
               <Input
                 name="direccion"
@@ -239,7 +342,6 @@ export default function Component() {
               />
               <XCircle className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
-
             <div className="relative">
               <Input
                 name="localidad"
@@ -252,7 +354,6 @@ export default function Component() {
             </div>
           </div>
         </div>
-
         <div>
           <h2 className="text-sm font-medium text-gray-500 mb-4">DESCRIPCIÓN:</h2>
           <div className="space-y-4">
@@ -266,7 +367,6 @@ export default function Component() {
               />
               <XCircle className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
             </div>
-
             <div className="bg-white/30 p-4 rounded-lg">
               <p className="text-sm font-medium mb-3">¿Cómo evaluarías el nivel de su actividad física?</p>
               <RadioGroup
@@ -288,7 +388,6 @@ export default function Component() {
                 </div>
               </RadioGroup>
             </div>
-
             <div className="bg-white/30 p-4 rounded-lg">
               <p className="text-sm font-medium mb-3">¿Tienes alguna enfermedad/discapacidad/otro?</p>
               <RadioGroup
@@ -306,7 +405,6 @@ export default function Component() {
                 </div>
               </RadioGroup>
             </div>
-
             {formData.tieneEnfermedad === 'si' && (
               <div className="relative">
                 <Input
@@ -321,8 +419,7 @@ export default function Component() {
             )}
           </div>
         </div>
-
-        <Button 
+        <Button
           className="w-full bg-teal-600 hover:bg-teal-700 text-white"
           onClick={handleSubmitForm}
         >
@@ -331,7 +428,6 @@ export default function Component() {
       </div>
     </div>
   )
-
   const renderSuccessScreen = () => (
     <div className="min-h-screen bg-cyan-50 relative overflow-hidden">
       {/* Top curved shape */}
@@ -360,7 +456,9 @@ export default function Component() {
   return (
     <div className="min-h-screen bg-cyan-50">
       <div className="container mx-auto max-w-md">
-        {step < 3 ? (
+        {isLogin ? (
+          renderLoginForm()
+        ) : step < 3 ? (
           renderInitialSteps()
         ) : step === 3 ? (
           renderUserTypeSelection()
