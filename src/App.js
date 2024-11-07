@@ -10,14 +10,22 @@ import DetailedViewProvider from './components/DetailedViewProvider';
 import theme from './styles/theme';
 import { services } from './data/servicesData';
 
+import axios from 'axios';
+
 function App() {
   const [value, setValue] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredServices, setFilteredServices] = useState(services);
   const [selectedService, setSelectedService] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
+  const [data, setData] = useState(null);
    
   useEffect(() => {
+    const data = axios.get('http://localhost:5000/api/services')
+
+      .then(response => setData(response.data))
+      .catch(error => console.error('Error al obtener datos:', error));
+
     const results = services.filter(service =>
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       service.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -27,6 +35,7 @@ function App() {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+    console.log(data)
   };
 
   const handleServiceSelect = (service) => {
