@@ -2,6 +2,7 @@ import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/mat
 import { styled } from '@mui/material/styles';
 import ServiceItem from './ServiceItem';
 
+
 const ServiceList = ({ filteredServices, handleServiceSelect }) => {
   return (
     filteredServices.length != 0 ?
