@@ -1,9 +1,10 @@
-import React from 'react';
-import { Typography, List, ListItem, Avatar, Rating, Button, Chip, Box } from '@mui/material';
-import { ShoppingCart, Wifi, Pets, Computer, People, Place } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react';
+import { Typography, List, ListItem, Avatar, Rating, Button, Chip, Box, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';import { ShoppingCart, Wifi, Pets, Computer, People, Place, Close as CloseIcon } from '@mui/icons-material';
 
 
 //Exportar conts
+
+// Función para obtener el ícono correspondiente al servicio
 const getServiceIcon = (serviceName) => {
     switch (serviceName) {
       case 'Supermercado':
@@ -17,7 +18,29 @@ const getServiceIcon = (serviceName) => {
     }
   };
 
+
+
 const DetailedViewProvider = ({selectedProvider}) => {
+  // Estado para controlar la visibilidad del Pop-Up
+  const [openPopup, setOpenPopup] = useState(false);
+
+   // Función para abrir el Pop-Up
+   const handleOpenPopup = () => {
+    setOpenPopup(true);
+  };
+
+    // Función para cerrar el Pop-Up
+    const handleClosePopup = () => {
+      setOpenPopup(false);
+    };
+
+     // Función para manejar la aceptación y navegación
+  const handleAccept = () => {
+    setOpenPopup(false);
+    // Aquí puedes añadir la navegación a la próxima pantalla.
+    // Ejemplo: navigate("/next-screen");
+  };
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Avatar sx={{ width: 100, height: 100, mb: 2 }}>{selectedProvider.name[0]}</Avatar>
@@ -53,9 +76,38 @@ const DetailedViewProvider = ({selectedProvider}) => {
             </ListItem>
           ))}
         </List>
-        <Button variant="contained" color="primary" sx={{ mt: 2, width: '100%' }}>
-          Solicitar
-        </Button>
+        <Button variant="contained" color="primary" sx={{ mt: 2, width: '100%' }} onClick={handleOpenPopup}>
+        Solicitar
+       </Button>
+          {/* Pop-Up de advertencia */}
+      <Dialog open={openPopup} onClose={handleClosePopup}>
+        <DialogTitle>
+          Advertencia
+          <IconButton
+            aria-label="close"
+            onClick={handleClosePopup}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            Al aceptar esta contratación, usted está de acuerdo en esperar a que {selectedProvider.name} acepte su solicitud de ayuda. En caso de que sea denegada, tendrá que volver a solicitar esta tarea.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAccept} color="primary" variant="contained">
+            Sí, acepto
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       </Box>
     );
   };
