@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { CssBaseline, ThemeProvider, Typography } from '@mui/material';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -18,15 +19,29 @@ function App() {
   const [filteredServices, setFilteredServices] = useState(services); //Guarda los servicios filtrados de acuerdo al término de búsqueda
   const [selectedService, setSelectedService] = useState(null); //Maneja que servicio específico se está visualizando en pantalla
   const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
+  const [fetchServices, setServices] = useState(services); //Guarda los servicios obtenidos de la API
 
   useEffect(() => {
-    const results = services.filter(service =>
-      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredServices(results);
-  }, [searchTerm]);
-
+    const fetchServices = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/services');
+        setServices(response.data);
+      } catch (error) {
+        console.error('Error fetching services:', error);
+      }
+    };
+  
+    fetchServices();
+  }, []);
+  console.log(services);
+  // useEffect(() => {
+  //   const results = services.filter(service =>
+  //     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     service.description.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  //   setFilteredServices(results);
+  // }, [searchTerm]);
+// console.log(services);
   const handleLogin = () => { //Activa la autenticación cambiando isAuthenticated a true.
     setIsAuthenticated(true);
   };
