@@ -80,33 +80,37 @@ const DetailedViewProvider = ({selectedProvider}) => {
         Solicitar
        </Button>
           {/* Pop-Up de advertencia */}
-      <Dialog open={openPopup} onClose={handleClosePopup}>
-        <DialogTitle>
-          Advertencia
-          <IconButton
-            aria-label="close"
-            onClick={handleClosePopup}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            Al aceptar esta contratación, usted está de acuerdo en esperar a que {selectedProvider.name} acepte su solicitud de ayuda. En caso de que sea denegada, tendrá que volver a solicitar esta tarea.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAccept} color="primary" variant="contained">
-            Sí, acepto
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <Dialog open={openPopup} onClose={handleClosePopup}>
+      <DialogTitle>
+        ¡Gracias por confiar en nosotros!
+        <IconButton
+          aria-label="close"
+          onClick={handleClosePopup}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <Typography>
+          Al confirmar esta solicitud, permites que {selectedProvider.name} reciba tu petición para ayudarte con esta tarea. En caso de que no pueda aceptar, tendrás la oportunidad de realizar otra solicitud.
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleAccept} color="primary" variant="contained">
+          Sí, estoy de acuerdo
+        </Button>
+        <Button onClick={handleClosePopup} color="dark">
+          Cancelar
+        </Button>
+      </DialogActions>
+    </Dialog>
+
 
       </Box>
     );

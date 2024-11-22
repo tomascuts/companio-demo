@@ -1,6 +1,8 @@
-import React from 'react'
-import { Box, Typography, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Checkbox, IconButton } from '@mui/material'
-import { ArrowBack as ArrowBackIcon } from '@mui/icons-material'
+// src/components/LoginInfoForm.js
+
+import React from 'react';
+import { Box, Typography, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Checkbox, IconButton } from '@mui/material';
+import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 
 export default function LoginInfoForm({ formData, handleInputChange, handleSubmitForm, setStep }) {
   return (
@@ -54,9 +56,42 @@ export default function LoginInfoForm({ formData, handleInputChange, handleSubmi
                   value={formData.nivelActividad}
                   onChange={handleInputChange}
                 >
-                  {['alta', 'media', 'baja'].map((level) => (
-                    <FormControlLabel key={level} value={level} control={<Radio />} label={level.charAt(0).toUpperCase() + level.slice(1)} />
-                  ))}
+                  <Box mt={2} mb={2}>
+                    <FormControlLabel 
+                      value="sedentario" 
+                      control={<Radio />} 
+                      label={
+                        <>
+                          <Typography>Sedentario</Typography>
+                          <Typography variant="body2" color="text.secondary">Poco o nada de ejercicio</Typography>
+                        </>
+                      } 
+                    />
+                  </Box>
+                  <Box mb={2}>
+                    <FormControlLabel 
+                      value="moderadamente_activo" 
+                      control={<Radio />} 
+                      label={
+                        <>
+                          <Typography>Moderadamente Activo</Typography>
+                          <Typography variant="body2" color="text.secondary">Ejercicio 2 a 4 días por semana</Typography>
+                        </>
+                      } 
+                    />
+                  </Box>
+                  <Box mb={2}>
+                    <FormControlLabel 
+                      value="muy_activo" 
+                      control={<Radio />} 
+                      label={
+                        <>
+                          <Typography>Muy Activo</Typography>
+                          <Typography variant="body2" color="text.secondary">Ejercicio 5 a 7 días por semana</Typography>
+                        </>
+                      } 
+                    />
+                  </Box>
                 </RadioGroup>
               </FormControl>
 
@@ -127,5 +162,5 @@ export default function LoginInfoForm({ formData, handleInputChange, handleSubmi
         Continuar
       </Button>
     </Box>
-  )
+  );
 }
