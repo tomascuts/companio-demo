@@ -15,7 +15,7 @@ export default function LoginInfoForm({ formData, handleInputChange, handleSubmi
       <Box>
         <Typography variant="subtitle2" color="text.secondary" mb={2}>INFORMACIÓN:</Typography>
         <Box display="flex" flexDirection="column" gap={2}>
-          {['nombreCompleto', 'fechaNacimiento', 'direccion', 'localidad'].map((field) => (
+          {['NombreCompleto', 'fechaNacimiento', 'direccion', 'localidad'].map((field) => (
             <TextField
               key={field}
               fullWidth

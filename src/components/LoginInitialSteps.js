@@ -1,32 +1,47 @@
 import React from 'react'
 import { Box, Typography, TextField, Button, Card, CardContent, IconButton } from '@mui/material'
-import { Clear as ClearIcon } from '@mui/icons-material'
+import { Clear as ClearIcon, SummarizeTwoTone } from '@mui/icons-material'
 import Logo from './Logo'
 
 export default function LoginInitialSteps({ step, setStep, setIsLogin, formData, handleInputChange }) {
   return (
-    <Card>
-      <CardContent sx={{ p: 3 }}>
-        <Logo />
+    <Card sx= {{marginRight: "-16px",  marginLeft: "-16px", backgroundColor:"#E0877F" }}>
+        <Box sx={ { backgroundColor:'#FBCCC8', borderBottomLeftRadius: '55%', borderBottomRightRadius: '55%',  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.5)' }} >
+      <Logo  />
+      </Box>      
+  <CardContent sx={{ p: 3, height: '100vh'}}>   
+
         {step === 1 ? (
           <Box textAlign="center">
-            <Typography variant="body1" color="text.secondary" sx={{ px: 2, mb: 3 }}>
+            <Typography variant="body1" color="white" sx={{ px: 2, mb: 3 }}>
               Conectá con la ayuda que necesitas, cuando mas lo necesitas
             </Typography>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <Button 
+            <Box display="flex" flexDirection="column" gap={3} alignItems="center">
+              <Button // Aquí defines el borderRadius
+                sx={{ 
+                  borderRadius: "16px",
+                  width: 'auto !important', // Ancho adaptado al texto
+                  paddingX: 3, // Espaciado horizontal para darle algo de margen al texto dentro del botón
+                  backgroundColor: "#953F39"
+                    }}
                 variant="contained"
-                color="primary"
                 onClick={() => setStep(2)}
               >
                 Creá tu cuenta
               </Button>
               <Button 
+               sx={{ 
+                  fontSize: "16px",
+                  borderRadius: "16px",
+                  width: 'auto !important', // Ancho adaptado al texto
+                  paddingX: 3,
+                  backgroundColor:"#8AB8C1", // Espaciado horizontal para darle algo de margen al texto dentro del botón
+                  color: "white"
+                    }}
                 variant="outlined"
-                color="secondary"
                 onClick={() => setIsLogin(true)}
               >
-                Inicia sesión
+                Inicia  sesión
               </Button>
             </Box>
           </Box>
