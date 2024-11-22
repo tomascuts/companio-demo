@@ -21,7 +21,19 @@ function App() {
   const [selectedService, setSelectedService] = useState(null);
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [data, setData] = useState(null);
-   
+  
+
+  const handleRegister = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/register', formData);
+      console.log(response.data.message);
+      /*setStep(5);*/
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+      alert('Hubo un error al registrarse');
+    }
+  };
+
   useEffect(() => {
     const data = axios.get('http://localhost:5000/api/services')
 
@@ -37,6 +49,7 @@ function App() {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    handleRegister();
   };
 
   const handleSearchChange = (event) => {

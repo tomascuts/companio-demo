@@ -1,8 +1,12 @@
 require('dotenv').config();  // Esto importa el archivo .env
-
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
+
+
+const authRoutes = require('./authRoutes');
+app.use(express.json()); // Necesario para procesar JSON en el cuerpo de la solicitud
+app.use('/api', authRoutes);
 
 // Usar la URI desde .env
 const mongoURI = "mongodb+srv://matiassanblas:companio123@clustercompanio.res3c.mongodb.net/"

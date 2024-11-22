@@ -17,25 +17,11 @@ const theme = createTheme({
   },
 });
 
+
 const LoginFlow = ({ onLogin }) => {
   const [step, setStep] = useState(1)
   const [isLogin, setIsLogin] = useState(false)
-  const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    telefono: '',
-    contrasena: '',
-    userType: '',
-    nombreCompleto: '',
-    fechaNacimiento: '',
-    direccion: '',
-    localidad: '',
-    actividades: '',
-    nivelActividad: '',
-    tieneEnfermedad: '',
-    enfermedad: '',
-    tareasAsistencia: []
-  })
+  
   const [loginData, setLoginData] = useState({
     email: '',
     contrasena: ''
