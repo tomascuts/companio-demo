@@ -8,9 +8,11 @@ import BottomNav from './components/BottomNav';
 import ProviderList from './components/ProviderList';
 import DetailedViewProvider from './components/DetailedViewProvider';
 import LoginFlow from './components/LoginFlow';
+import RequestList from './components/RequestList';
 
 import theme from './styles/theme';
 import { services } from './data/servicesData';
+import { requests } from './data/requestsData';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //Controla si el Usuario ha iniciado sesión o no
@@ -20,6 +22,7 @@ function App() {
   const [selectedService, setSelectedService] = useState(null); //Maneja que servicio específico se está visualizando en pantalla
   const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
   const [fetchServices, setServices] = useState(services); //Guarda los servicios obtenidos de la API
+  const [fetchRequests, setRequests] = useState(requests); //Guarda los pedidos obtenidos de la API
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -42,6 +45,12 @@ function App() {
   //   setFilteredServices(results);
   // }, [searchTerm]);
 // console.log(services);
+
+useEffect(() => {
+  // Aquí puedes utilizar los datos de requests si es necesario
+  console.log(fetchRequests);
+}, [fetchRequests]);
+
   const handleLogin = () => { //Activa la autenticación cambiando isAuthenticated a true.
     setIsAuthenticated(true);
   };
@@ -69,7 +78,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      {/* <CssBaseline />
       {isAuthenticated ? (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
           <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
@@ -97,7 +106,8 @@ function App() {
         </div>
       ) : (
         <LoginFlow onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
-      )}
+      )} */}
+      <RequestList requests={fetchRequests} />
     </ThemeProvider>
   );
 }
