@@ -99,6 +99,10 @@ const requestProviderSchema = new mongoose.Schema({
 
 const RequestProvider = mongoose.model('RequestProvider', requestProviderSchema);
 
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
+
 // Ruta para obtener todos los servicios
 app.get('/services', async (req, res) => {
     try {
@@ -129,7 +133,7 @@ app.get('/requests/:providerId', async (req, res) => {
     const { providerId } = req.params;
 
     // Busca el documento del proveedor con el ID proporcionado.
-    const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) });
+    const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
     if (!provider) {
       return res.status(404).json({ message: 'Proveedor no encontrado' });
@@ -146,9 +150,11 @@ app.get('/requests/:providerId', async (req, res) => {
 // Ruta para obtener todos los servicios
 app.get('/requests', async (req, res) => {
   try {
-      const requests = await RequestProvider.find().populate('requests');
+      const requests = await RequestProvider.find();
+      console.log("Data from MongoDB:", requests); // Verifica qué devuelve MongoDB.
       res.json(requests);
   } catch (err) {
+      console.error("Error fetching requests:", err); // Registra cualquier error.
       res.status(500).json({ message: err.message });
   }
 });

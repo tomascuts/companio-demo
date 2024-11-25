@@ -46,10 +46,31 @@ function App() {
   // }, [searchTerm]);
 // console.log(services);
 
+// useEffect(() => {
+//   // Aquí puedes utilizar los datos de requests si es necesario
+//   console.log(fetchRequests);
+// }, [fetchRequests]);
+
+
 useEffect(() => {
-  // Aquí puedes utilizar los datos de requests si es necesario
-  console.log(fetchRequests);
+  const fetchRequests = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/requests');
+      setRequests(response.data);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
+  };
+
+  fetchRequests();
 }, [fetchRequests]);
+useEffect(() => {
+  const results = services.filter(service =>
+    service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  setFilteredServices(results);
+}, [searchTerm, services]);
 
   const handleLogin = () => { //Activa la autenticación cambiando isAuthenticated a true.
     setIsAuthenticated(true);
