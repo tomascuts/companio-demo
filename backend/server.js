@@ -74,7 +74,19 @@ const requestSchema = new mongoose.Schema({
     default: null
   },
   icon: {
-    type: String, // Nombre del icono representado como string.
+    type: Object, // Nombre del icono representado como string.
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  methodPayment: {
+    type: String,
+    required: true
+  },
+  amountPayment: {
+    type: Double,
     required: true
   }
 });

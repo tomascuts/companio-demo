@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ShoppingCart, Pets } from '@mui/icons-material';
-import PetsIcon from '@mui/icons-material/Pets';
+import { format } from 'date-fns';
+import RequestDetail from './RequestDetail';
 
 const RequestList = ({ requests }) => {
+  const [selectedRequest, setSelectedRequest] = useState(null); // Request seleccionado
 
       // Agrupar los requests por proveedor y luego por estado
   const groupedRequests = requests.map((requestProvider) => {
@@ -19,7 +21,22 @@ const RequestList = ({ requests }) => {
     return { providerName: requestProvider.providerName, groupedByState };
   });
 
+
+  // Función para manejar la selección del request
+  const handleRequestSelect = (request) => {
+    setSelectedRequest(request);
+  };
+
+  // Función para volver a la lista de requests
+  const handleBack = () => {
+    setSelectedRequest(null);
+  };
+
   return (
+    <>
+    {selectedRequest ? (
+      <RequestDetail request={selectedRequest} onBack={handleBack} />
+    ) : (
     <List>
       {groupedRequests.map((provider) => (
         <React.Fragment key={provider.providerName}>
@@ -32,9 +49,16 @@ const RequestList = ({ requests }) => {
                 {state === 'Completed' ? 'Históricas' : state === 'Pending' ? 'Pendientes de responder' : state === 'In Progress' ? 'Activas' : state}
               </Typography>
               {provider.groupedByState[state].map((request, index) => (
-            <ListItem key={index}>
+            <ListItem key={index}
+            button={state !== 'Completed'} // Hacer clicable solo si el estado no es "Completed"
+            onClick={() => {
+              if (state !== 'Completed') {
+                handleRequestSelect(request);
+              }
+            }}
+          >
               <ListItemIcon>
-                {request.icon}
+              {request.icon}
               </ListItemIcon>
               <ListItemText
                 primary={request.services}
@@ -44,7 +68,7 @@ const RequestList = ({ requests }) => {
                       {request.assisted}
                     </Typography>
                     <br />
-                    {request.date ? request.date : ''}
+                    {request.date ? format(new Date(request.date), 'yyyy-MM-dd') : ''}
                     <br />
                     {request.paymentDescription ? request.paymentDescription : ''}
                   </>
@@ -57,6 +81,8 @@ const RequestList = ({ requests }) => {
         </React.Fragment>
       ))}
     </List>
+    )}
+    </>
   );
 };
 

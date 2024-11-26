@@ -58,12 +58,13 @@ useEffect(() => {
       const response = await axios.get('http://localhost:5000/requests');
       setRequests(response.data);
     } catch (error) {
-      console.error('Error fetching services:', error);
+      console.error('Error fetching requests:', error);
     }
   };
 
   fetchRequests();
-}, [fetchRequests]);
+}, []); // Nota que aquí la lista de dependencias está vacía
+
 useEffect(() => {
   const results = services.filter(service =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
