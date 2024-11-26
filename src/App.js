@@ -34,14 +34,14 @@ function App() {
     fetchServices();
   }, []);
   console.log(services);
-  // useEffect(() => {
-  //   const results = services.filter(service =>
-  //     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     service.description.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  //   setFilteredServices(results);
-  // }, [searchTerm]);
-// console.log(services);
+   useEffect(() => {
+     const results = services.filter(service =>
+       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       service.description.toLowerCase().includes(searchTerm.toLowerCase())
+     );
+     setFilteredServices(results);
+   }, [searchTerm]);
+console.log(services);
   const handleLogin = () => { //Activa la autenticación cambiando isAuthenticated a true.
     setIsAuthenticated(true);
   };
