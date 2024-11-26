@@ -11,10 +11,10 @@ export default function LoginUserTypeSelection({ userName, handleUserTypeSelect 
       
       <Box display="flex" flexDirection="column" gap={4} mt={4}>
         {[
-          { type: 'asistido', label: 'Prefiero ser asistido', color: 'primary', avatar: '/avatar-asistido.avif' },
+          { type: 'asistido', label: 'Prefiero ser asistido', color: 'primary', avatar: '\abueloLogo.png' },
           { type: 'asistir', label: 'Prefiero asistir', color: 'secondary', avatar: '/avatar-asistir.webp' }
         ].map((option) => (
-          <Box 
+          <Box   
             key={option.type}
             onClick={() => handleUserTypeSelect(option.type)}
             sx={{ cursor: 'pointer' }}
