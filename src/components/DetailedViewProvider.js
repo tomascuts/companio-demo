@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, List, ListItem, Avatar, Rating, Button, Chip, Box, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';import { ShoppingCart, Wifi, Pets, Computer, People, Place, Close as CloseIcon } from '@mui/icons-material';
-
+import PaymentPopup from './PaymentPopUp';
 
 //Exportar conts
 
@@ -23,6 +23,8 @@ const getServiceIcon = (serviceName) => {
 const DetailedViewProvider = ({selectedProvider}) => {
   // Estado para controlar la visibilidad del Pop-Up
   const [openPopup, setOpenPopup] = useState(false);
+  const [showConfirmationScreen, setShowConfirmationScreen] = useState(false);
+  const [paymentPopupOpen, setPaymentPopupOpen] = useState(false);
 
    // Función para abrir el Pop-Up
    const handleOpenPopup = () => {
@@ -37,11 +39,56 @@ const DetailedViewProvider = ({selectedProvider}) => {
      // Función para manejar la aceptación y navegación
   const handleAccept = () => {
     setOpenPopup(false);
+    setShowConfirmationScreen(true);
     // Aquí puedes añadir la navegación a la próxima pantalla.
     // Ejemplo: navigate("/next-screen");
   };
 
+  const handleBack = () => {
+    setShowConfirmationScreen(false);
+    // Simula un timer de 3 segundos antes de mostrar el Pop-Up
+    setTimeout(() => {
+      setPaymentPopupOpen(true);
+    }, 3000);
+  };
+
     return (
+      <>
+      {showConfirmationScreen ? (
+        <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          padding: '20px',
+          height: '100vh',
+          backgroundColor: '#FDE9E9',
+        }}
+      >
+        <Typography variant="h4" sx={{ color: '#D56A6A', mb: 2 }}>
+          ¡Solicitud enviada!
+        </Typography>
+        <Typography variant="body1" sx={{ color: '#9E4B4B', mb: 2 }}>
+          Ahora solo queda esperar a que {selectedProvider.name} confirme tu solicitud. Te notificaremos tan pronto como haya una respuesta.
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleBack} // Botón que inicia el timer
+          sx={{
+            backgroundColor: '#9E4B4B',
+              color: '#FFF',
+              borderRadius: '8px',
+              padding: '10px 20px',
+              mt: 2,
+            }}
+          >
+          Volver
+          </Button>
+          </Box>
+      ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Avatar sx={{ width: 100, height: 100, mb: 2 }}>{selectedProvider.name[0]}</Avatar>
         <Typography variant="h5" sx={{ mb: 1 }}>{selectedProvider.name}</Typography>
@@ -51,10 +98,11 @@ const DetailedViewProvider = ({selectedProvider}) => {
         </Box>
         <Typography variant="body1" sx={{ mb: 1 }}>{selectedProvider.occupation}</Typography>
         <Typography variant="body2" sx={{ mb: 2 }}>{selectedProvider.location}</Typography>
-        <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>{selectedProvider.description}</Typography>
+        <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
+          {selectedProvider.description ? selectedProvider.description : "Sin descripción"}</Typography>
         <Typography variant="h6" sx={{ mb: 1 }}>Ofrezco:</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mb: 2 }}>
-          {selectedProvider.services.map((service) => (
+          {selectedProvider.services?.map((service) => (
             <Chip
               key={service}
               icon={getServiceIcon(service)}
@@ -65,16 +113,17 @@ const DetailedViewProvider = ({selectedProvider}) => {
         </Box>
         <Typography variant="h6" sx={{ mb: 1 }}>Reseñas:</Typography>
         <List sx={{ width: '100%' }}>
-          {selectedProvider.reviews.map((review, index) => (
-            <ListItem key={index} sx={{ flexDirection: 'column', alignItems: 'flex-start', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <Avatar sx={{ mr: 1 }}>{review.author[0]}</Avatar>
-                <Typography variant="body1">{review.author} - {review.age} años</Typography>
-              </Box>
-              <Rating value={review.rating} readOnly size="small" sx={{ mb: 1 }} />
-              <Typography variant="body2">{review.comment}</Typography>
-            </ListItem>
-          ))}
+        {selectedProvider.reviews?.map((review, index) => (
+  <ListItem key={index} sx={{ flexDirection: 'column', alignItems: 'flex-start', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+      <Avatar sx={{ mr: 1 }}>{review.author[0]}</Avatar>
+      <Typography variant="body1">{review.author} - {review.age} años</Typography>
+    </Box>
+    <Rating value={review.rating} readOnly size="small" sx={{ mb: 1 }} />
+    <Typography variant="body2">{review.comment}</Typography>
+  </ListItem>
+))}
+
         </List>
         <Button variant="contained" color="primary" sx={{ mt: 2, width: '100%' }} onClick={handleOpenPopup}>
         Solicitar
@@ -113,6 +162,10 @@ const DetailedViewProvider = ({selectedProvider}) => {
 
 
       </Box>
+    )}
+    {/* Pop-Up final */}
+    <PaymentPopup open={paymentPopupOpen} onClose={() => setPaymentPopupOpen(false)} />
+  </>
     );
   };
   

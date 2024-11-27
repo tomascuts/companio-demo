@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Box, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
 import axios from 'axios';
+import { ArrowBack } from '@mui/icons-material';
 
 const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
   const [openDialog, setOpenDialog] = useState(false); // Estado para manejar la visibilidad del diálogo
@@ -74,7 +75,10 @@ const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
       }}
     >
       {/* Header */}
-      <Box display="flex" alignItems="center" gap="16px">
+      <IconButton edge="start" color="inherit" onClick={onBack} aria-label="back">
+            <ArrowBack />
+          </IconButton>
+          <Box display="flex" alignItems="center" gap="16px">
         <Avatar
           src="/path-to-avatar.jpg" // Aquí puedes usar la imagen de un avatar real
           alt="Ricardo Rodríguez"
@@ -85,11 +89,10 @@ const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
             {request.assisted}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            request.
-            San Isidro
+            {request.location}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            75 años
+            {request.age}
           </Typography>
         </Box>
       </Box>

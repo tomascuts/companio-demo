@@ -11,15 +11,17 @@ import LoginFlow from './components/LoginFlow';
 import RequestList from './components/RequestList';
 
 import theme from './styles/theme';
+import {services } from './data/servicesData';
 import { requests } from './data/requestsData';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //Controla si el Usuario ha iniciado sesión o no
+  const [userRole, setUserRole] = useState(''); //Guarda el rol del usuario
   const [value, setValue] = useState(1); //Indica la pestaña seleccionada en la navegación inferior (BottomNav)
   const [searchTerm, setSearchTerm] = useState(''); // Guarda el término de búsqueda ingresado por el usuario
   const [filteredServices, setFilteredServices] = useState([]); //Guarda los servicios filtrados de acuerdo al término de búsqueda
   const [selectedService, setSelectedService] = useState(null); //Maneja que servicio específico se está visualizando en pantalla
-  const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
+  const [selectedProvider, setSelectedProvider] = useState(false); //Maneja que Proveedor específico se está visualizando en pantalla
   const [fetchServices, setFetchServices] = useState([]); //Guarda los servicios obtenidos de la API
   const [fetchRequests, setRequests] = useState(requests); //Guarda los pedidos obtenidos de la API
 
@@ -27,29 +29,14 @@ function App() {
     const getServices = async () => {
       try {
         const response = await axios.get('http://localhost:5000/services');
-        setFetchServices(response.data); // Actualiza el estado correcto
+        // setFetchServices(response.data); // Actualiza el estado correcto
+        setFetchServices(services);
       } catch (error) {
         console.error('Error fetching services:', error);
       }
     };
     getServices();
   }, []);
-  console.log(fetchServices);
-  console.log(fetchServices.providers);
-  // useEffect(() => {
-  //   const results = services.filter(service =>
-  //     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     service.description.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  //   setFilteredServices(results);
-  // }, [searchTerm]);
-// console.log(services);
-
-// useEffect(() => {
-//   // Aquí puedes utilizar los datos de requests si es necesario
-//   console.log(fetchRequests);
-// }, [fetchRequests]);
-
 
 useEffect(() => {
   const fetchRequests = async () => {
@@ -72,8 +59,9 @@ useEffect(() => {
   setFilteredServices(results);
 }, [searchTerm, fetchServices]);
 
-  const handleLogin = () => { //Activa la autenticación cambiando isAuthenticated a true.
+  const handleLogin = ({userType}) => { //Activa la autenticación cambiando isAuthenticated a true.
     setIsAuthenticated(true);
+    setUserRole(userType);
   };
 
   const handleSearchChange = (event) => { //Actualiza searchTerm cada vez que el usuario escribe en la barra de búsqueda (SearchBar).
@@ -99,12 +87,15 @@ useEffect(() => {
 
   return (
     <ThemeProvider theme={theme}>
-     {/*<CssBaseline />
+     <CssBaseline />
       {isAuthenticated ? (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
           <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
           <div style={{ padding: '16px', flex: 1, overflow: 'auto' }}>
-            {!selectedService && !selectedProvider ? (
+            
+            {userRole === 'asistente' ? ( 
+            <RequestList requests={fetchRequests} setRequests={setRequests} />
+            ) : (!selectedService && !selectedProvider) ? (
               <>
                 <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
                 <ServiceList filteredServices={filteredServices} handleServiceSelect={handleServiceSelect} />
@@ -127,8 +118,7 @@ useEffect(() => {
         </div>
       ) : (
         <LoginFlow onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
-      )} */}
-      <RequestList requests={fetchRequests} setRequests={setRequests} />
+      )}
     </ThemeProvider>
   );
 }

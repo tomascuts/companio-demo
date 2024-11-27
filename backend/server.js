@@ -28,7 +28,7 @@ const serviceSchema = new Schema({
   description: { type: String, required: true },
   detailedDescription: { type: String },
   icon: { type: String, required: true },
-  providers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }] // Referencia correcta
+  providers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }]
 });
 
   
@@ -116,29 +116,44 @@ const requestProviderSchema = new mongoose.Schema({
 
 const RequestProvider = mongoose.model('RequestProvider', requestProviderSchema);
 
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  contrasena: { type: String, required: true },
+  userType: { type: String, required: true }, // 'asistido' o 'asistente'
+  nombre: { type: String, required: true }, // Nombre del usuario
+});
+
+const User = mongoose.model('User', userSchema);
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
 // Ruta para obtener todos los servicios
 app.get('/services', async (req, res) => {
-    try {
-        const services = await Service.find().populate('providers');
-        res.json(services);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  try {
+    const services = await Service.find();
+    console.log("Servicios sin populate:", services); // Verifica los servicios antes de hacer el populate
+
+    const servicesWithProviders = await Service.find().populate('providers');
+    console.log("Servicios con providers poblados:", servicesWithProviders); // Verifica los servicios después del populate
+    res.json(servicesWithProviders);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
+
 
 // Ruta para obtener todos los proveedores de un servicio específico
 app.get('/providers/:serviceId', async (req, res) => {
     try {
         const serviceId = req.params.serviceId;
-        const service = await Service.findById({ id: serviceId });
+        const service = await Service.findOne({ id: parseInt(serviceId, 10) });
         if (!service) {
             return res.status(404).json({ message: 'Service not found' });
         }
-        const providers = await Provider.find({ _id: { $in: service.providers } });
+        console.log("Service found:", service); // Verifica el servicio encontrado.
+        const providers = await Provider.find({ services: service.name });
         res.json(providers);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -198,14 +213,6 @@ app.get('/requests/:providerId/request/:requestId', async (req, res) => {
     // Busca el request dentro del provider
     const request = provider.requests.find(req => req.requestId === Number(requestId));
 
-    console.log('Provider:', provider);
-    console.log('Requests:', provider.requests);
-    console.log('RequestId buscado:', requestId);
-    console.log('Request encontrado:', request);
-    console.log('provider.requests:', provider.requests.map(req => req.requestId));
-    console.log('RequestId recibido como parámetro:', requestId);
-    console.log('RequestId convertido a número:', Number(requestId));
-
     // Manejo del caso en que no se encuentra el request
     if (!request) {
       return res.status(404).json({ message: 'Request no encontrado' });
@@ -255,5 +262,27 @@ app.get('/requests', async (req, res) => {
   } catch (err) {
       console.error("Error fetching requests:", err); // Registra cualquier error.
       res.status(500).json({ message: err.message });
+  }
+});
+
+
+app.post('/auth/login', async (req, res) => {
+  const { email, contrasena } = req.body;
+
+  try {
+      const user = await User.findOne({ email });
+      if (!user) {
+          return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      // Comparar contraseñas (si están en texto plano, simplemente compara directamente)
+      if (user.contrasena !== contrasena) {
+          return res.status(401).json({ message: 'Credenciales incorrectas' });
+      }
+
+      res.json({ userType: user.userType, nombre: user.nombre }); // Retorna datos necesarios
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error en el servidor' });
   }
 });
