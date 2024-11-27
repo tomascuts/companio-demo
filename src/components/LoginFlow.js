@@ -42,7 +42,7 @@ const LoginFlow = ({ onLogin }) => {
     contrasena: ''
   })
   const [userName, setUserName] = useState('')
-  const [userType, setUserType] = useState('');
+  const [userType, setUserType] = useState('asistido');
 
   const handleInputChange = (e) => { // Actualiza el estado de formData a medida que el usuario escribe en los campos del formulario. Si el campo es nombre, también actualiza el estado userName.
     setFormData({
@@ -106,7 +106,7 @@ const handleUserType = (type) => {
   useEffect(() => {
     if (step === 5) {
       const timer = setTimeout(() => {
-        onLogin(); 
+        onLogin('asistido'); 
       }, 4000);
 
       return () => clearTimeout(timer); 

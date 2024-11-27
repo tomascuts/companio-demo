@@ -59,10 +59,17 @@ useEffect(() => {
   setFilteredServices(results);
 }, [searchTerm, fetchServices]);
 
-  const handleLogin = ({userType}) => { //Activa la autenticación cambiando isAuthenticated a true.
+const handleLogin = (data) => {
+  if (data && data.userType) {  // Verifica que data y userType no sean undefined o null
+    const { userType } = data;
     setIsAuthenticated(true);
-    setUserRole(userType);
-  };
+    setUserRole(userType || 'asistido');
+  } else {
+    // Si no hay un userType, asignar 'asistido' por defecto
+    setIsAuthenticated(true);
+    setUserRole('asistido');
+  }
+};
 
   const handleSearchChange = (event) => { //Actualiza searchTerm cada vez que el usuario escribe en la barra de búsqueda (SearchBar).
     setSearchTerm(event.target.value);

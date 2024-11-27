@@ -62,7 +62,7 @@ export default function LoginForm({ loginData, handleLoginInputChange, handleLog
 
       <Box mt={2} textAlign="center">
         <Typography variant="body2">
-          No tienes cuenta?{" "}
+          ¿No tenés cuenta?{" "}
           <Button
             color="primary"
             onClick={() => {

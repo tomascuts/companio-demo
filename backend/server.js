@@ -67,7 +67,7 @@ const requestSchema = new mongoose.Schema({
   },
   state: {
     type: String,
-    enum: ['Pending', 'In Progress', 'Completed', null],
+    enum: ['Pending', 'In Progress', 'Completed', 'Rejected', null],
     default: null
   },
   paymentDescription: {
