@@ -2,41 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Typography, List, ListItem, Avatar, Rating, Button, Chip, Box, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';import { ShoppingCart, Wifi, Pets, Computer, People, Place, Close as CloseIcon } from '@mui/icons-material';
 import PaymentPopup from './PaymentPopUp';
 
-//Exportar conts
-
 // Función para obtener el ícono correspondiente al servicio
 const getServiceIcon = (serviceName) => {
-    switch (serviceName) {
-      case 'Supermercado':
-        return <ShoppingCart />;
-      case 'Acompañamiento':
-        return <People />;
-      case 'Mascotas':
-        return <Pets />;
-      default:
-        return null;
-    }
-  };
+  switch (serviceName) {
+    case 'Supermercado':
+      return <ShoppingCart />;
+    case 'Acompañamiento':
+      return <People />;
+    case 'Mascotas':
+      return <Pets />;
+    default:
+      return null;
+  }
+};
 
-
-
-const DetailedViewProvider = ({selectedProvider}) => {
-  // Estado para controlar la visibilidad del Pop-Up
+const DetailedViewProvider = ({ selectedProvider }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [showConfirmationScreen, setShowConfirmationScreen] = useState(false);
   const [paymentPopupOpen, setPaymentPopupOpen] = useState(false);
 
-   // Función para abrir el Pop-Up
-   const handleOpenPopup = () => {
+  const handleOpenPopup = () => {
     setOpenPopup(true);
   };
 
-    // Función para cerrar el Pop-Up
-    const handleClosePopup = () => {
-      setOpenPopup(false);
-    };
+  const handleClosePopup = () => {
+    setOpenPopup(false);
+  };
 
-     // Función para manejar la aceptación y navegación
   const handleAccept = () => {
     setOpenPopup(false);
     setShowConfirmationScreen(true);
