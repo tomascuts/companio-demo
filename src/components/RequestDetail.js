@@ -1,7 +1,66 @@
-import React from 'react';
-import { Box, Typography, Button, Avatar } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import axios from 'axios';
 
-const RequestDetail = ({ request, onBack }) => {
+const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
+  const [openDialog, setOpenDialog] = useState(false); // Estado para manejar la visibilidad del diálogo
+  
+  const stateOrder = ['In Progress', 'Pending', 'Completed'];
+  
+  // Método para aceptar la solicitud
+  const handleAcceptRequest = async () => {
+    try {
+      const response = await axios.put(`http://localhost:5000/requests/${providerId}/request/${request.requestId}`, {
+        state: 'In Progress',
+      });
+      console.log('Request updated:', response.data);
+      onBack(); // Volver a la pantalla anterior después de actualizar
+    } catch (error) {
+      console.error('Error updating request:', error);
+      
+    }
+  };
+
+    // Método para rechazar la solicitud
+    const handleRejectRequest = async () => {
+      try {
+        const response = await axios.put(`http://localhost:5000/requests/${providerId}/request/${request.requestId}`, {
+          state: 'Rejected',
+        });
+        console.log('Request updated:', response.data);
+        onBack(); // Volver a la pantalla anterior después de actualizar
+      } catch (error) {
+        console.error('Error updating request:', error);
+      }
+    };
+
+    // Método para completar la solicitud
+    const handleCompleteRequest = async () => {
+      try {
+        const response = await axios.put(`http://localhost:5000/requests/${providerId}/request/${request.requestId}`, {
+          state: 'Completed',
+        });
+        console.log('Request updated:', response.data);
+        // onBack(); // Volver a la pantalla anterior después de actualizar
+      } catch (error) {
+        console.error('Error updating request:', error);
+        
+      }
+    };
+
+  // Ejecutar handleCompleteRequest automáticamente cuando se abre el diálogo
+  useEffect(() => {
+    if (openDialog) {
+      handleCompleteRequest();
+      const timer = setTimeout(() => {
+        setOpenDialog(false);
+        onBack();
+      }, 3000); // Cerrar el diálogo después de 3 segundos
+
+      return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
+    }
+  }, [openDialog]);
+
   return (
     <Box
       sx={{
@@ -26,6 +85,7 @@ const RequestDetail = ({ request, onBack }) => {
             {request.assisted}
           </Typography>
           <Typography variant="body2" color="text.secondary">
+            request.
             San Isidro
           </Typography>
           <Typography variant="body2" color="text.secondary">
@@ -56,37 +116,58 @@ const RequestDetail = ({ request, onBack }) => {
 
       {/* Buttons */}
       <Box mt={3} display="flex" flexDirection="column">
+      {request.state === 'Pending' && (
         <Button
           variant="contained"
           color="success"
           fullWidth
-          sx={{ textTransform: 'none', width: 'fit-content', alignSelf: 'center' }}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          disabled={stateInProgress}
+          onClick={handleAcceptRequest}
         >
           Aceptar solicitud
         </Button>
+      )}
         {request.state === 'Pending' && (
         <Button 
           variant="contained"
           color="error"
           fullWidth
-          sx={{ textTransform: 'none', width: 'fit-content', alignSelf: 'center' }}
-          onClick={onBack}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          onClick={handleRejectRequest}
         >
           Rechazar solicitud
         </Button>
         )}
+              {request.state === 'In Progress' && (
+        <Button
+          variant="contained"
+          color="success"
+          fullWidth
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+        >
+          Ir al chat
+        </Button>
+      )}
         {request.state === 'In Progress' && (
         <Button
           variant="contained"
           color="error"
           fullWidth
-          sx={{ textTransform: 'none', width: 'fit-content', alignSelf: 'center' }}
-          onClick={onBack}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          onClick={() => setOpenDialog(true)}
         >
           Terminar servicio
         </Button>
         )}
       </Box>
+            {/* Diálogo para confirmar la finalización del servicio */}
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>¡Genial!</DialogTitle>
+        <DialogContent>
+          <Typography>Has terminado tu servicio. Concluye con el pago en efectivo y estarás listo para ayudar con nuevas solicitudes.</Typography>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

@@ -11,32 +11,31 @@ import LoginFlow from './components/LoginFlow';
 import RequestList from './components/RequestList';
 
 import theme from './styles/theme';
-import { services } from './data/servicesData';
 import { requests } from './data/requestsData';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //Controla si el Usuario ha iniciado sesión o no
   const [value, setValue] = useState(1); //Indica la pestaña seleccionada en la navegación inferior (BottomNav)
   const [searchTerm, setSearchTerm] = useState(''); // Guarda el término de búsqueda ingresado por el usuario
-  const [filteredServices, setFilteredServices] = useState(services); //Guarda los servicios filtrados de acuerdo al término de búsqueda
+  const [filteredServices, setFilteredServices] = useState([]); //Guarda los servicios filtrados de acuerdo al término de búsqueda
   const [selectedService, setSelectedService] = useState(null); //Maneja que servicio específico se está visualizando en pantalla
   const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
-  const [fetchServices, setServices] = useState(services); //Guarda los servicios obtenidos de la API
+  const [fetchServices, setFetchServices] = useState([]); //Guarda los servicios obtenidos de la API
   const [fetchRequests, setRequests] = useState(requests); //Guarda los pedidos obtenidos de la API
 
   useEffect(() => {
-    const fetchServices = async () => {
+    const getServices = async () => {
       try {
         const response = await axios.get('http://localhost:5000/services');
-        setServices(response.data);
+        setFetchServices(response.data); // Actualiza el estado correcto
       } catch (error) {
         console.error('Error fetching services:', error);
       }
     };
-  
-    fetchServices();
+    getServices();
   }, []);
-  console.log(services);
+  console.log(fetchServices);
+  console.log(fetchServices.providers);
   // useEffect(() => {
   //   const results = services.filter(service =>
   //     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -66,12 +65,12 @@ useEffect(() => {
 }, []); // Nota que aquí la lista de dependencias está vacía
 
 useEffect(() => {
-  const results = services.filter(service =>
+  const results = fetchServices.filter(service =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     service.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
   setFilteredServices(results);
-}, [searchTerm, services]);
+}, [searchTerm, fetchServices]);
 
   const handleLogin = () => { //Activa la autenticación cambiando isAuthenticated a true.
     setIsAuthenticated(true);
@@ -100,7 +99,7 @@ useEffect(() => {
 
   return (
     <ThemeProvider theme={theme}>
-      {/* <CssBaseline />
+     {/*<CssBaseline />
       {isAuthenticated ? (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
           <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
@@ -118,7 +117,7 @@ useEffect(() => {
                 <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                   Resultados de asistentes cerca de su zona
                 </Typography>
-                <ProviderList providers={selectedService.providers} handleProviderSelect={handleProviderSelect} />
+                <ProviderList providers={selectedService?.providers} handleProviderSelect={handleProviderSelect} />
               </>
             ) : (
               <DetailedViewProvider selectedProvider={selectedProvider}/>
@@ -129,7 +128,7 @@ useEffect(() => {
       ) : (
         <LoginFlow onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
       )} */}
-      <RequestList requests={fetchRequests} />
+      <RequestList requests={fetchRequests} setRequests={setRequests} />
     </ThemeProvider>
   );
 }

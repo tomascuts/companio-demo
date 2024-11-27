@@ -23,13 +23,14 @@ connection.once('open', () => {
 const { Schema } = mongoose;
 
 const serviceSchema = new Schema({
-    id: { type: Number, required: true },
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    detailedDescription: { type: String },
-    icon: { type: String, required: true },
-    providers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }] // Relaciona con el modelo Provider
+  id: { type: Number, required: true },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  detailedDescription: { type: String },
+  icon: { type: String, required: true },
+  providers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }] // Referencia correcta
 });
+
   
 const Service = mongoose.model('Service', serviceSchema);
 
@@ -79,14 +80,18 @@ const requestSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true
+    required: false
   },
   methodPayment: {
     type: String,
-    required: true
+    required: false
   },
   amountPayment: {
-    type: Double,
+    type: Number,
+    required: false
+  },
+  requestId: {
+    type: Number,
     required: true
   }
 });
@@ -129,11 +134,12 @@ app.get('/services', async (req, res) => {
 app.get('/providers/:serviceId', async (req, res) => {
     try {
         const serviceId = req.params.serviceId;
-        const service = await Service.findById(serviceId).populate('providers');
+        const service = await Service.findById({ id: serviceId });
         if (!service) {
             return res.status(404).json({ message: 'Service not found' });
         }
-        res.json(service.providers);
+        const providers = await Provider.find({ _id: { $in: service.providers } });
+        res.json(providers);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -154,12 +160,93 @@ app.get('/requests/:providerId', async (req, res) => {
     // Devuelve el provider con sus requests.
     res.status(200).json(provider);
   } catch (error) {
+    console.error('Error al obtener el proveedor con sus requests:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+});
+
+app.get('/requests/:providerId/requests', async (req, res) => {
+  try {
+    const { providerId } = req.params;
+
+    // Busca el documento del proveedor con el ID proporcionado.
+    const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
+
+    if (!provider) {
+      return res.status(404).json({ message: 'Proveedor no encontrado' });
+    }
+
+    // Devuelve el provider con sus requests.
+    res.status(200).json(provider.requests);  
+  } catch (error) {
     console.error('Error al obtener los requests:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 });
 
-// Ruta para obtener todos los servicios
+app.get('/requests/:providerId/request/:requestId', async (req, res) => {
+  try {
+    const { providerId, requestId } = req.params;
+
+    // Busca el documento del proveedor con el ID proporcionado.
+    const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
+
+    if (!provider) {
+      return res.status(404).json({ message: 'Proveedor no encontrado' });
+    }
+
+    // Busca el request dentro del provider
+    const request = provider.requests.find(req => req.requestId === Number(requestId));
+
+    console.log('Provider:', provider);
+    console.log('Requests:', provider.requests);
+    console.log('RequestId buscado:', requestId);
+    console.log('Request encontrado:', request);
+    console.log('provider.requests:', provider.requests.map(req => req.requestId));
+    console.log('RequestId recibido como parámetro:', requestId);
+    console.log('RequestId convertido a número:', Number(requestId));
+
+    // Manejo del caso en que no se encuentra el request
+    if (!request) {
+      return res.status(404).json({ message: 'Request no encontrado' });
+    }
+
+    // Devuelve el request encontrado
+    res.status(200).json(request);
+  } catch (error) {
+    console.error('Error al obtener los requests:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+});
+
+
+// Endpoint para actualizar el estado del request dentro de un provider
+app.put('/requests/:providerId/request/:requestId', async (req, res) => {
+  try {
+    const { providerId, requestId } = req.params;
+    const { state } = req.body;
+
+    // Actualiza el estado del request en el subdocumento
+    const provider = await RequestProvider.findOneAndUpdate(
+      { providerId: parseInt(providerId, 10), 'requests.requestId': parseInt(requestId, 10) },
+      { $set: { 'requests.$.state': state } }, // Actualiza solo el campo `state`
+      { new: true, runValidators: true } // Devuelve el documento actualizado y valida los cambios
+    );
+
+    if (!provider) {
+      return res.status(404).json({ message: 'Proveedor no encontrado o request no encontrado' });
+    }
+
+    // Devuelve el documento actualizado
+    res.status(200).json(provider);
+  } catch (error) {
+    console.error('Error updating request:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+// Ruta para obtener todos los requests
 app.get('/requests', async (req, res) => {
   try {
       const requests = await RequestProvider.find();
