@@ -11,7 +11,7 @@ const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
   // Método para aceptar la solicitud
   const handleAcceptRequest = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/requests/${providerId}/request/${request.requestId}`, {
+      const response = await axios.put(`http://localhost:5001/requests/${providerId}/request/${request.requestId}`, {
         state: 'In Progress',
       });
       console.log('Request updated:', response.data);
@@ -25,7 +25,7 @@ const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
     // Método para rechazar la solicitud
     const handleRejectRequest = async () => {
       try {
-        const response = await axios.put(`http://localhost:5000/requests/${providerId}/request/${request.requestId}`, {
+        const response = await axios.put(`http://localhost:5001/requests/${providerId}/request/${request.requestId}`, {
           state: 'Rejected',
         });
         console.log('Request updated:', response.data);
@@ -38,7 +38,7 @@ const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
     // Método para completar la solicitud
     const handleCompleteRequest = async () => {
       try {
-        const response = await axios.put(`http://localhost:5000/requests/${providerId}/request/${request.requestId}`, {
+        const response = await axios.put(`http://localhost:5001/requests/${providerId}/request/${request.requestId}`, {
           state: 'Completed',
         });
         console.log('Request updated:', response.data);

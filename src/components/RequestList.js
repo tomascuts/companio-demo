@@ -15,7 +15,7 @@ const RequestList = ({ requests, setRequests }) => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/requests');
+      const response = await axios.get('http://localhost:5001/requests');
       setRequests(response.data);
     } catch (error) {
       console.error('Error fetching requests:', error);

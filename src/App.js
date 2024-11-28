@@ -27,7 +27,7 @@ function App() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/services');
+        const response = await axios.get('http://localhost:5001/services');
         setServices(response.data);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -48,7 +48,7 @@ function App() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/requests');
+        const response = await axios.get('http://localhost:5001/requests');
         setRequests(response.data);
       } catch (error) {
         console.error('Error fetching requests:', error);
