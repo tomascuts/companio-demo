@@ -16,7 +16,7 @@ const theme = createTheme({
     },
   },
 });
-
+//holaaa
 const LoginFlow = ({ onLogin }) => {
   const [step, setStep] = useState(1)
   const [isLogin, setIsLogin] = useState(false)
@@ -42,7 +42,7 @@ const LoginFlow = ({ onLogin }) => {
   })
   const [userName, setUserName] = useState('')
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) => { // Actualiza el estado de formData a medida que el usuario escribe en los campos del formulario. Si el campo es nombre, también actualiza el estado userName.
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -52,14 +52,14 @@ const LoginFlow = ({ onLogin }) => {
     }
   }
 
-  const handleLoginInputChange = (e) => {
+  const handleLoginInputChange = (e) => { //Actualiza el estado de loginData cuando el usuario escribe su email o contraseña para iniciar sesión.
     setLoginData({
       ...loginData,
       [e.target.name]: e.target.value
     })
   }
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = (e) => { //Se ejecuta cuando el usuario envía el formulario de inicio de sesión. 
     e.preventDefault()
     console.log('Login submitted:', loginData)
     setStep(3)
