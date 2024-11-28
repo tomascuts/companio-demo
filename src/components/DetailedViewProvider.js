@@ -21,6 +21,10 @@ const DetailedViewProvider = ({ selectedProvider }) => {
   const [showConfirmationScreen, setShowConfirmationScreen] = useState(false);
   const [paymentPopupOpen, setPaymentPopupOpen] = useState(false);
 
+  if (!selectedProvider) {
+    return null; // O podrías mostrar un mensaje de "No hay proveedor seleccionado"
+  }
+
   const handleOpenPopup = () => {
     setOpenPopup(true);
   };
@@ -82,8 +86,8 @@ const DetailedViewProvider = ({ selectedProvider }) => {
           </Box>
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Avatar sx={{ width: 100, height: 100, mb: 2 }}>{selectedProvider.name[0]}</Avatar>
-        <Typography variant="h5" sx={{ mb: 1 }}>{selectedProvider.name}</Typography>
+        <Avatar sx={{ width: 100, height: 100, mb: 2 }}>{selectedProvider.nombre}</Avatar>
+        <Typography variant="h5" sx={{ mb: 1 }}>{selectedProvider.nombre}</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Rating value={selectedProvider.rating} readOnly size="small" />
           <Typography variant="body2" sx={{ ml: 1 }}>{selectedProvider.rating}</Typography>
@@ -94,27 +98,47 @@ const DetailedViewProvider = ({ selectedProvider }) => {
           {selectedProvider.description ? selectedProvider.description : "Sin descripción"}</Typography>
         <Typography variant="h6" sx={{ mb: 1 }}>Ofrezco:</Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mb: 2 }}>
-          {selectedProvider.services?.map((service) => (
-            <Chip
-              key={service}
-              icon={getServiceIcon(service)}
-              label={service}
-              sx={{ m: 0.5 }}
-            />
-          ))}
+        {selectedProvider.tareas && selectedProvider.tareas.length > 0 ? (
+  selectedProvider.tareas.map((service) => (
+    <Chip
+      key={service}
+      icon={getServiceIcon(service)}
+      label={service}
+      sx={{ m: 0.5 }}
+    />
+  ))
+) : (
+  <Typography variant="body2">No hay tareas disponibles.</Typography> // Mensaje para cuando no haya tareas
+)}
+
         </Box>
         <Typography variant="h6" sx={{ mb: 1 }}>Reseñas:</Typography>
-        <List sx={{ width: '100%' }}>
-        {selectedProvider.reviews?.map((review, index) => (
-  <ListItem key={index} sx={{ flexDirection: 'column', alignItems: 'flex-start', backgroundColor: 'white', borderRadius: '10px', mb: 1 }}>
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-      <Avatar sx={{ mr: 1 }}>{review.author[0]}</Avatar>
-      <Typography variant="body1">{review.author} - {review.age} años</Typography>
-    </Box>
-    <Rating value={review.rating} readOnly size="small" sx={{ mb: 1 }} />
-    <Typography variant="body2">{review.comment}</Typography>
-  </ListItem>
-))}
+       <List sx={{ width: '100%' }}>
+       {selectedProvider.reviews && selectedProvider.reviews.length > 0 ? (
+  selectedProvider.reviews.map((review, index) => (
+    <ListItem
+      key={index}
+      sx={{
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        mb: 1
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+        <Avatar sx={{ mr: 1 }}>{review.author[0]}</Avatar>
+        <Typography variant="body1">
+          {review.author} - {review.age} años
+        </Typography>
+      </Box>
+      <Rating value={review.rating} readOnly size="small" sx={{ mb: 1 }} />
+      <Typography variant="body2">{review.comment}</Typography>
+    </ListItem>
+  ))
+) : (
+  <Typography variant="body2">No hay reseñas disponibles.</Typography>
+)}
 
         </List>
         <Button variant="contained" color="primary" sx={{ mt: 2, width: '100%' }} onClick={handleOpenPopup}>

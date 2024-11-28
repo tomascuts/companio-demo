@@ -125,9 +125,9 @@ export default function LoginInfoForm({ formData, handleInputChange, handleSubmi
                 {[
                   { id: 'acompanamiento', label: 'Acompañamiento' },
                   { id: 'ayuda_compras', label: 'Ayuda con las compras' },
-                  { id: 'tramites_online', label: 'Ayuda con trámites online' },
-                  { id: 'tramites_presenciales', label: 'Ayuda con trámites presenciales' },
-                  { id: 'pasear_perro', label: 'Pasear al perro' },
+                  { id: 'tramites_online', label: 'Trámites online' },
+                  { id: 'tramites_presenciales', label: 'Trámites presenciales' },
+                  { id: 'pasear_perro', label: 'Pasear a la mascota' },
                   { id: 'ayuda_tecnologia', label: 'Ayuda con la tecnología' },
                 ].map((task) => (
                   <FormControlLabel

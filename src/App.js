@@ -11,96 +11,93 @@ import LoginFlow from './components/LoginFlow';
 import RequestList from './components/RequestList';
 
 import theme from './styles/theme';
-import {services } from './data/servicesData';
-import { requests } from './data/requestsData';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); //Controla si el Usuario ha iniciado sesión o no
   const [userRole, setUserRole] = useState(''); //Guarda el rol del usuario
   const [value, setValue] = useState(1); //Indica la pestaña seleccionada en la navegación inferior (BottomNav)
   const [searchTerm, setSearchTerm] = useState(''); // Guarda el término de búsqueda ingresado por el usuario
-  const [filteredServices, setFilteredServices] = useState([]); //Guarda los servicios filtrados de acuerdo al término de búsqueda
+  const [services, setServices] = useState([]); // Guarda los servicios obtenidos de la API
+  const [filteredServices, setFilteredServices] = useState(services); //Guarda los servicios filtrados de acuerdo al término de búsqueda
   const [selectedService, setSelectedService] = useState(null); //Maneja que servicio específico se está visualizando en pantalla
-  const [selectedProvider, setSelectedProvider] = useState(false); //Maneja que Proveedor específico se está visualizando en pantalla
-  const [fetchServices, setFetchServices] = useState([]); //Guarda los servicios obtenidos de la API
+  const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
+  const [fetchServices, setFetchServices] = useState(services); //Guarda los servicios obtenidos de la API
   const [fetchRequests, setRequests] = useState(requests); //Guarda los pedidos obtenidos de la API
 
   useEffect(() => {
-    const getServices = async () => {
+    const fetchServices = async () => {
       try {
         const response = await axios.get('http://localhost:5000/services');
-        // setFetchServices(response.data); // Actualiza el estado correcto
-        setFetchServices(services);
+        setServices(response.data);
       } catch (error) {
         console.error('Error fetching services:', error);
       }
     };
-    getServices();
+  
+    fetchServices();
   }, []);
 
-useEffect(() => {
-  const fetchRequests = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/requests');
-      setRequests(response.data);
-    } catch (error) {
-      console.error('Error fetching requests:', error);
-    }
-  };
-
-  fetchRequests();
-}, []); // Nota que aquí la lista de dependencias está vacía
-
-useEffect(() => {
-  const results = fetchServices.filter(service =>
+  useEffect(() => {
+    const results = services.filter(service =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     service.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  setFilteredServices(results);
-}, [searchTerm, fetchServices]);
+  setFilteredServices(results); // Actualiza los servicios filtrados
+}, [searchTerm, services]);
 
-const handleLogin = (data) => {
-  if (data && data.userType) {  // Verifica que data y userType no sean undefined o null
-    const { userType } = data;
-    setIsAuthenticated(true);
-    setUserRole(userType || 'asistido');
-  } else {
-    // Si no hay un userType, asignar 'asistido' por defecto
-    setIsAuthenticated(true);
-    setUserRole('asistido');
-  }
-};
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/requests');
+        setRequests(response.data);
+      } catch (error) {
+        console.error('Error fetching requests:', error);
+      }
+    };
+  
+    fetchRequests();
+  }, []); // Nota que aquí la lista de dependencias está vacía
 
-  const handleSearchChange = (event) => { //Actualiza searchTerm cada vez que el usuario escribe en la barra de búsqueda (SearchBar).
-    setSearchTerm(event.target.value);
+  const handleLogin = (data) => {
+    if (data && data.userType) {  // Verifica que data y userType no sean undefined o null
+      const { userType } = data;
+      setIsAuthenticated(true);
+      setUserRole(userType || 'asistido');
+    } else {
+      // Si no hay un userType, asignar 'asistido' por defecto
+      setIsAuthenticated(true);
+      setUserRole('asistido');
+    }
+  };  
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value); // Actualiza el término de búsqueda
   };
 
-  const handleServiceSelect = (service) => { // Guarda el Servicio seleccionado, mostrando su información detallada
-    console.log('Selected Service:', service);
-    setSelectedService(service);
+  const handleServiceSelect = (service) => {
+    setSelectedService(service); // Guarda el servicio seleccionado
   };
 
-  const handleBackClick = () => { // Vuelve atrás, deshaciendo la selección del proveedor o servicio.
+  const handleBackClick = () => {
     if (selectedProvider) {
-      setSelectedProvider(null);
+      setSelectedProvider(null); // Vuelve al servicio seleccionado
     } else if (selectedService) {
-      setSelectedService(null);
+      setSelectedService(null); // Vuelve a la lista de servicios
     }
   };
-  
-  const handleProviderSelect = (provider) => { // Guarda el Proveedor seleccionado, mostrando su información detallada
-    setSelectedProvider(provider);
-  };
 
+  const handleProviderSelect = (provider) => {
+    setSelectedProvider(provider); // Guarda el proveedor seleccionado
+  };
+  
   return (
     <ThemeProvider theme={theme}>
-     <CssBaseline />
+      <CssBaseline />
       {isAuthenticated ? (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
           <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
           <div style={{ padding: '16px', flex: 1, overflow: 'auto' }}>
-            
-            {userRole === 'asistente' ? ( 
+          {userRole === 'asistente' ? ( 
             <RequestList requests={fetchRequests} setRequests={setRequests} />
             ) : (!selectedService && !selectedProvider) ? (
               <>
@@ -115,7 +112,7 @@ const handleLogin = (data) => {
                 <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                   Resultados de asistentes cerca de su zona
                 </Typography>
-                <ProviderList providers={selectedService?.providers} handleProviderSelect={handleProviderSelect} />
+                <ProviderList selectedService={selectedService} handleProviderSelect={handleProviderSelect} />
               </>
             ) : (
               <DetailedViewProvider selectedProvider={selectedProvider}/>
@@ -128,6 +125,33 @@ const handleLogin = (data) => {
       )}
     </ThemeProvider>
   );
+  
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
