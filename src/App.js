@@ -22,7 +22,7 @@ function App() {
   const [selectedService, setSelectedService] = useState(null); //Maneja que servicio específico se está visualizando en pantalla
   const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
   const [fetchServices, setFetchServices] = useState(services); //Guarda los servicios obtenidos de la API
-  const [fetchRequests, setRequests] = useState(requests); //Guarda los pedidos obtenidos de la API
+  const [fetchRequests, setRequests] = useState([]); //Guarda los pedidos obtenidos de la API
 
   useEffect(() => {
     const fetchServices = async () => {
