@@ -25,7 +25,7 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-
+console.log("hola")
 // Ruta para obtener usuarios según localidad, tipo de usuario y tarea
 app.get('/users', async (req, res) => {
   console.log('Received query parameters:', req.query);  // Para ver qué datos está recibiendo la API
