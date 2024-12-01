@@ -5,6 +5,7 @@ import LoginInitialSteps from './LoginInitialSteps.js'
 import LoginUserTypeSelection from './LoginUserTypeSelection.js'
 import LoginInfoForm from './LoginInfoForm.js'
 import LoginSuccessScreen from './LoginSuccessScreen.js'
+import axios from 'axios'
 
 const theme = createTheme({
   palette: {
@@ -16,7 +17,7 @@ const theme = createTheme({
     },
   },
 });
-
+//holaaa
 const LoginFlow = ({ onLogin }) => {
   const [step, setStep] = useState(1)
   const [isLogin, setIsLogin] = useState(false)
@@ -41,6 +42,7 @@ const LoginFlow = ({ onLogin }) => {
     contrasena: ''
   })
   const [userName, setUserName] = useState('')
+  const [userType, setUserType] = useState('asistido');
 
   const handleInputChange = (e) => { // Actualiza el estado de formData a medida que el usuario escribe en los campos del formulario. Si el campo es nombre, también actualiza el estado userName.
     setFormData({
@@ -52,18 +54,44 @@ const LoginFlow = ({ onLogin }) => {
     }
   }
 
-  const handleLoginInputChange = (e) => { //Actualiza el estado de loginData cuando el usuario escribe su email o contraseña para iniciar sesión.
-    setLoginData({
-      ...loginData,
-      [e.target.name]: e.target.value
-    })
-  }
+  const handleLoginInputChange = (event) => {
+    const { name, value } = event.target;
+    console.log(`Actualizando ${name}:`, value); // Debug
+    setLoginData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  
+  
 
-  const handleLoginSubmit = (e) => { //Se ejecuta cuando el usuario envía el formulario de inicio de sesión. 
-    e.preventDefault()
-    console.log('Login submitted:', loginData)
-    setStep(3)
-  }
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    console.log(loginData); // Debug
+    try {
+        const response = await axios.post('http://localhost:5001/auth/login', loginData);
+
+        // Si la autenticación es exitosa
+        const { userType, nombre } = response.data;
+        onLogin({ userType });
+        setStep(5);
+
+        console.log(`Bienvenido, ${nombre}!`);
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            alert('Usuario no encontrado');
+        } else if (error.response && error.response.status === 401) {
+            alert('Credenciales incorrectas');
+        } else {
+            alert('Error en el servidor, intente más tarde');
+        }
+    }
+};
+
+const handleUserType = (type) => {
+  setUserType(type);
+  onLogin({ userType: type });
+};
 
   const handleUserTypeSelect = (type) => {
     setFormData({ ...formData, userType: type })
@@ -78,7 +106,7 @@ const LoginFlow = ({ onLogin }) => {
   useEffect(() => {
     if (step === 5) {
       const timer = setTimeout(() => {
-        onLogin(); 
+        onLogin('asistido'); 
       }, 4000);
 
       return () => clearTimeout(timer); 
@@ -96,6 +124,7 @@ const LoginFlow = ({ onLogin }) => {
               handleLoginSubmit={handleLoginSubmit}
               setIsLogin={setIsLogin}
               setStep={setStep}
+              onUserType={handleUserType}
             />
           ) : step < 3 ? (
             <LoginInitialSteps 

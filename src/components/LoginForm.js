@@ -2,6 +2,7 @@ import React from 'react'
 import { Box, Typography, TextField, Button, IconButton } from '@mui/material'
 import { Clear as ClearIcon } from '@mui/icons-material'
 import Logo from './Logo'
+import axios from 'axios'
 
 export default function LoginForm({ loginData, handleLoginInputChange, handleLoginSubmit, setIsLogin, setStep }) {
   return (
@@ -61,7 +62,7 @@ export default function LoginForm({ loginData, handleLoginInputChange, handleLog
 
       <Box mt={2} textAlign="center">
         <Typography variant="body2">
-          No tienes cuenta?{" "}
+          ¿No tenés cuenta?{" "}
           <Button
             color="primary"
             onClick={() => {
