@@ -18,7 +18,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const SearchBar = ({ searchTerm, handleSearchChange }) => {
   return (
-    <StyledPaper>
+    <StyledPaper sx={{backgroundColor: "#E0877F", display:"flex",flexDirection: "row-reverse", boxShadow: "0 5px 15px 2px rgb(93,93,93)"}}>
       <Search />
       <StyledInputBase
         placeholder="Busca por servicio o persona"
