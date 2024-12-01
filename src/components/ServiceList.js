@@ -14,6 +14,7 @@ const ServiceList = ({ filteredServices, handleServiceSelect }) => {
     const fetchServices = async () => {
       try {
         const response = await axios.get('http://localhost:5001/services');
+        console.log('Servicios recibidos:', response.data);
         setServices(response.data); // Actualiza los servicios con los datos de la API
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -58,7 +59,7 @@ const ServiceList = ({ filteredServices, handleServiceSelect }) => {
             <ServiceItem
               key={service.id}
               service={service}
-              onClick={() => handleServiceSelect(service)}
+              onClick={handleServiceSelect}
             />
           ))}
         </List>

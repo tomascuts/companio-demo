@@ -94,9 +94,15 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {isAuthenticated ? (
-        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column'}}>
           <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
-          <div style={{ padding: '16px', flex: 1, overflow: 'auto' }}>
+          {selectedService && (
+          <Typography variant="h6" sx={{ padding: '16px', textAlign: 'center', color: "#953F39", fontWeight: 700 }}>
+            {selectedService.name} {/* Título del servicio seleccionado */}
+          </Typography>
+        )}
+          <div style={{ padding: '16px', flex: 1, overflow: 'auto',alignItems: 'center',
+          justifyContent: 'center' }}>
           {userRole === 'asistente' ? ( 
             <RequestList requests={fetchRequests} setRequests={setRequests} />
             ) : (!selectedService && !selectedProvider) ? (

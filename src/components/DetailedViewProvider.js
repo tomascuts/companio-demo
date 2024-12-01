@@ -5,12 +5,18 @@ import PaymentPopup from './PaymentPopUp';
 // Función para obtener el ícono correspondiente al servicio
 const getServiceIcon = (serviceName) => {
   switch (serviceName) {
-    case 'Supermercado':
-      return <ShoppingCart />;
+    case 'Ayuda con las compras':
+      return <ShoppingCart  sx={{color:"#953F39"}}/>;
     case 'Acompañamiento':
       return <People />;
     case 'Mascotas':
       return <Pets />;
+    case "Tecnología":
+      return <Wifi />;
+    case "Trámites Online":
+      return <Computer />;
+    case "Trámites presenciales":
+      return <Place/>
     default:
       return null;
   }
@@ -59,14 +65,15 @@ const DetailedViewProvider = ({ selectedProvider }) => {
           justifyContent: 'center',
           textAlign: 'center',
           padding: '20px',
-          height: '100vh',
+          height: '60vh',
           backgroundColor: '#FDE9E9',
+          borderRadius: "25px"
         }}
       >
         <Typography variant="h4" sx={{ color: '#D56A6A', mb: 2 }}>
           ¡Solicitud enviada!
         </Typography>
-        <Typography variant="body1" sx={{ color: '#9E4B4B', mb: 2 }}>
+        <Typography variant="body1" sx={{ color: '#000000', mb: 2 }}>
           Ahora solo queda esperar a que {selectedProvider.name} confirme tu solicitud. Te notificaremos tan pronto como haya una respuesta.
         </Typography>
         <Button
@@ -74,7 +81,7 @@ const DetailedViewProvider = ({ selectedProvider }) => {
           color="primary"
           onClick={handleBack} // Botón que inicia el timer
           sx={{
-            backgroundColor: '#9E4B4B',
+              backgroundColor: '#9E4B4B',
               color: '#FFF',
               borderRadius: '8px',
               padding: '10px 20px',
