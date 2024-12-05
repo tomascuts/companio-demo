@@ -17,7 +17,7 @@ const theme = createTheme({
     },
   },
 });
-//holaaa
+
 const LoginFlow = ({ onLogin }) => {
   const [step, setStep] = useState(1)
   const [isLogin, setIsLogin] = useState(false)
@@ -43,6 +43,7 @@ const LoginFlow = ({ onLogin }) => {
   })
   const [userName, setUserName] = useState('')
   const [userType, setUserType] = useState('asistido');
+  //onLogin.userType
 
   const handleInputChange = (e) => { // Actualiza el estado de formData a medida que el usuario escribe en los campos del formulario. Si el campo es nombre, también actualiza el estado userName.
     setFormData({
@@ -71,8 +72,14 @@ const LoginFlow = ({ onLogin }) => {
     try {
         const response = await axios.post('http://localhost:5001/auth/login', loginData);
 
+        console.log('handleLoginSubmit');
+        console.log(response);
+
         // Si la autenticación es exitosa
         const { userType, nombre } = response.data;
+
+        console.log(userType);
+
         onLogin({ userType });
         setStep(5);
 
@@ -98,15 +105,41 @@ const handleUserType = (type) => {
     setStep(4)
   }
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     console.log('Form submitted:', formData)
+
+    try
+    {
+        const mapData = {
+          nombre: formData.nombre,
+          fecha_nacimiento: new Date(formData.fechaNacimiento),
+          direccion: {
+              localidad: formData.localidad,
+              calle: formData.direccion, 
+              numero: 123,
+          },
+          descripcion: formData.enfermedad,
+          tareas: [],
+          userType: formData.userType,
+          email: formData.email,
+          contrasena: formData.contrasena,
+          reviews: [], 
+      };
+
+      const response = await axios.post('http://localhost:5001/register/Create/User', mapData);
+      console.log(response.data);
+      //onLogin(formData.userType)
+    }
+    catch(error){
+      console.error('Error al registrar usuario:', error.response?.data?.message || error.message);
+    }
     setStep(5)
   }
 
   useEffect(() => {
     if (step === 5) {
       const timer = setTimeout(() => {
-        onLogin('asistido'); 
+        //onLogin('asistido'); 
       }, 4000);
 
       return () => clearTimeout(timer); 

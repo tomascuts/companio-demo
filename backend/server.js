@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const {Service, Provider, Request, RequestProvider, User, UserPrueba } = require('./models');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -24,112 +25,7 @@ connection.once('open', () => {
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
-
-// Definición del esquema Service
-const { Schema } = mongoose;
-
-const serviceSchema = new Schema({
-  id: { type: Number, required: true },
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  detailedDescription: { type: String },
-  icon: { type: String, required: true },
-  providers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Provider' }]
-});
-
   
-const Service = mongoose.model('Service', serviceSchema);
-
-// Definición del esquema Provider
-const providerSchema = new Schema({
-  name: { type: String, required: true },
-  location: { type: String, required: true },
-  occupation: { type: String, required: true },
-  rating: { type: Number, min: 0, max: 5, required: true },
-  description: { type: String },
-  services: [{ type: String }],
-  reviews: [{
-    author: { type: String },
-    age: { type: Number },
-    rating: { type: Number, min: 0, max: 5 },
-    comment: { type: String }
-  }]
-});
-
-const Provider = mongoose.model('Provider', providerSchema);
-
-const requestSchema = new mongoose.Schema({
-  services: {
-    type: String,
-    required: true
-  },
-  assisted: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: Date,
-    default: null
-  },
-  state: {
-    type: String,
-    enum: ['Pending', 'In Progress', 'Completed', 'Rejected', null],
-    default: null
-  },
-  paymentDescription: {
-    type: String,
-    default: null
-  },
-  icon: {
-    type: Object, // Nombre del icono representado como string.
-    required: true
-  },
-  description: {
-    type: String,
-    required: false
-  },
-  methodPayment: {
-    type: String,
-    required: false
-  },
-  amountPayment: {
-    type: Number,
-    required: false
-  },
-  requestId: {
-    type: Number,
-    required: true
-  }
-});
-
-const Request = mongoose.model('Request', requestSchema);
-
-const requestProviderSchema = new mongoose.Schema({
-  providerId: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  providerName: {
-    type: String,
-    required: true
-  },
-  requests: {
-    type: [requestSchema], // Subdocumentos para las solicitudes.
-    default: []
-  }
-});
-
-const RequestProvider = mongoose.model('RequestProvider', requestProviderSchema);
-
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  contrasena: { type: String, required: true },
-  userType: { type: String, required: true }, // 'asistido' o 'asistente'
-  nombre: { type: String, required: true }, // Nombre del usuario
-});
-
-const User = mongoose.model('User', userSchema);
 
 //Endpoint Lara
 
@@ -314,4 +210,42 @@ try {
     console.error(error);
     res.status(500).json({ message: 'Error en el servidor' });
 }
+});
+
+
+app.post('/register/Create/User', async (req, res) => {
+
+  console.log(req.body);
+  const collection = mongoose.connection.db.collection('userpruebas');
+
+  try {
+    const existingUser = await collection.findOne({ email: req.body.email });
+    
+    if (existingUser) {
+        return res.status(409).json({ message: 'El usuario ya existe, por favor verifique el email ingresado.' });
+    }
+
+    const newUser = new UserPrueba({
+      nombre: req.body.nombre,
+      fecha_nacimiento: req.body.fecha_nacimiento,
+      direccion: {
+        localidad: req.body.direccion.localidad,
+        calle: req.body.direccion.calle,
+        numero: req.body.direccion.numero, //repetido o no segmentado el dato desde el front
+      },
+      descripcion: req.body.descripcion, 
+      tareas: req.body.tareas,
+      userType: req.body.userType,
+      email: req.body.email,
+      contrasena: req.body.contrasena,
+      reviews: req.body.reviews,
+    });
+
+    await collection.insertOne(newUser);
+    res.status(201).json(newUser);
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Ocurrio un error al intentar registrar al usuario.' });
+  }
 });

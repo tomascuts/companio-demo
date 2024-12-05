@@ -1,5 +1,3 @@
-// src/components/LoginInfoForm.js
-
 import React from 'react';
 import { Box, Typography, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Checkbox, IconButton } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
