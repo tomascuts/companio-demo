@@ -26,29 +26,21 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
   
-
-//Endpoint Lara
-
 // Ruta para obtener usuarios según localidad, tipo de usuario y tarea
 app.get('/users', async (req, res) => {
-  console.log('Received query parameters:', req.query);  // Para ver qué datos está recibiendo la API
+  console.log('/users | req:', req.query); 
   try {
-    const { localidad, tarea, userType } = req.query;
-    console.log(`Filtering by localidad: ${localidad}, tarea: ${tarea}, userType: ${userType}`);
+    const collection = mongoose.connection.db.collection('userpruebas');
 
-    const collection = mongoose.connection.db.collection('users');
-
-    // Construir el filtro
     const query = {
       userType: 'asistir',
-      'direccion.localidad': localidad,
-      tareas: { $in: [tarea] },  // Buscando si la tarea está en el array 'tareas'
+      'direccion.localidad': req.query.localidad,
+      tareas: { $in: [req.query.tarea] },
     };
 
-    console.log('MongoDB Query:', query);  // Verifica el query que se está enviando a MongoDB
-
     const assistants = await collection.find(query).toArray();
-    console.log('Found assistants:', assistants);  // Verifica los resultados
+    console.log('assistants: ', assistants);
+
 
     res.json(assistants);
   } catch (err) {
@@ -58,9 +50,9 @@ app.get('/users', async (req, res) => {
 });
 
 
-
 app.get('/services', async (req, res) => {
   try {
+    console.log('/services'); 
     const services = await mongoose.connection.db.collection('services').find().toArray();
     res.json(services);
   } catch (err) {
@@ -72,6 +64,7 @@ app.get('/services', async (req, res) => {
 // Ruta para obtener todos los proveedores de un servicio específico
 app.get('/providers/:serviceId', async (req, res) => {
   try {
+      console.log('/providers/:serviceId req: ' , req); 
       const serviceId = req.params.serviceId;
       const service = await Service.findOne({ id: parseInt(serviceId, 10) });
       if (!service) {
@@ -88,16 +81,15 @@ app.get('/providers/:serviceId', async (req, res) => {
 // Ruta para obtener los pedidos por providerId
 app.get('/requests/:providerId', async (req, res) => {
 try {
+  console.log('/requests/:providerId' , req); 
   const { providerId } = req.params;
 
-  // Busca el documento del proveedor con el ID proporcionado.
   const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
   if (!provider) {
     return res.status(404).json({ message: 'Proveedor no encontrado' });
   }
 
-  // Devuelve el provider con sus requests.
   res.status(200).json(provider);
 } catch (error) {
   console.error('Error al obtener el proveedor con sus requests:', error);
@@ -107,16 +99,15 @@ try {
 
 app.get('/requests/:providerId/requests', async (req, res) => {
 try {
+  console.log('/requests/:providerId/requests | req: ', req)
   const { providerId } = req.params;
 
-  // Busca el documento del proveedor con el ID proporcionado.
   const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
   if (!provider) {
     return res.status(404).json({ message: 'Proveedor no encontrado' });
   }
 
-  // Devuelve el provider con sus requests.
   res.status(200).json(provider.requests);  
 } catch (error) {
   console.error('Error al obtener los requests:', error);
@@ -126,24 +117,21 @@ try {
 
 app.get('/requests/:providerId/request/:requestId', async (req, res) => {
 try {
+  console.log('/requests/:providerId/request/:requestId req: ', req);
   const { providerId, requestId } = req.params;
 
-  // Busca el documento del proveedor con el ID proporcionado.
   const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
   if (!provider) {
     return res.status(404).json({ message: 'Proveedor no encontrado' });
   }
 
-  // Busca el request dentro del provider
   const request = provider.requests.find(req => req.requestId === Number(requestId));
 
-  // Manejo del caso en que no se encuentra el request
   if (!request) {
     return res.status(404).json({ message: 'Request no encontrado' });
   }
 
-  // Devuelve el request encontrado
   res.status(200).json(request);
 } catch (error) {
   console.error('Error al obtener los requests:', error);
@@ -155,6 +143,7 @@ try {
 // Endpoint para actualizar el estado del request dentro de un provider
 app.put('/requests/:providerId/request/:requestId', async (req, res) => {
 try {
+  console.log('/requests/:providerId/request/:requestId | req: ' , req);
   const { providerId, requestId } = req.params;
   const { state } = req.body;
 
@@ -181,6 +170,7 @@ try {
 // Ruta para obtener todos los requests
 app.get('/requests', async (req, res) => {
 try {
+    console.log('/requests');
     const requests = await RequestProvider.find();
     console.log("Data from MongoDB:", requests); // Verifica qué devuelve MongoDB.
     res.json(requests);
@@ -192,16 +182,17 @@ try {
 
 
 app.post('/auth/login', async (req, res) => {
-const { email, contrasena } = req.body;
-
 try {
-    const user = await User.findOne({ email });
+    console.log(`/auth/login | req: ${JSON.stringify(req.body)}`)
+
+    const user = await UserPrueba.findOne({ email: req.body.email });
+
     if (!user) {
         return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
     // Comparar contraseñas (si están en texto plano, simplemente compara directamente)
-    if (user.contrasena !== contrasena) {
+    if (user.contrasena !== req.body.contrasena) {
         return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
 
@@ -215,7 +206,7 @@ try {
 
 app.post('/register/Create/User', async (req, res) => {
 
-  console.log(req.body);
+  console.log('/register/Create/User | req:', req.body);
   const collection = mongoose.connection.db.collection('userpruebas');
 
   try {
@@ -239,6 +230,7 @@ app.post('/register/Create/User', async (req, res) => {
       email: req.body.email,
       contrasena: req.body.contrasena,
       reviews: req.body.reviews,
+      rating: req.body.rating
     });
 
     await collection.insertOne(newUser);

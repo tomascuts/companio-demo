@@ -78,7 +78,7 @@ const AssistantList = ({ selectedService, handleProviderSelect }) => {
               </ListItem>
             ))
           ) : (
-            <Typography variant="h6" color="text.secondary">No assistants found</Typography>
+            <Typography variant="h6" color="text.secondary">No se encontraron asistentes.</Typography>
           )}
         </List>
       )}

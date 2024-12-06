@@ -6,6 +6,7 @@ import LoginUserTypeSelection from './LoginUserTypeSelection.js'
 import LoginInfoForm from './LoginInfoForm.js'
 import LoginSuccessScreen from './LoginSuccessScreen.js'
 import axios from 'axios'
+import { randomReviews } from '../data/reviewsData.js';
 
 const theme = createTheme({
   palette: {
@@ -108,14 +109,15 @@ const handleUserType = (type) => {
           direccion: {
               localidad: formData.localidad,
               calle: formData.direccion, 
-              numero: 123,
+              numero: Math.floor(Math.random() * (1000 - 100 + 1)) + 100,
           },
           descripcion: formData.actividades,
           tareas: formData.tareasAsistencia,
           userType: formData.userType,
           email: formData.email,
           contrasena: formData.contrasena,
-          reviews: [], 
+          reviews: randomReviews, 
+          rating: ((Math.random() * (5 - 3.5) + 3.5).toFixed(2)).toString()
       };
 
       const response = await axios.post('http://localhost:5001/register/Create/User', mapData);

@@ -112,12 +112,13 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   contrasena: { type: String, required: true },
   reviews: [ReviewSchema],
+  rating: { type: String, required: true },
 });
 
 const Service = mongoose.model('Service', serviceSchema);
 const Provider = mongoose.model('Provider', providerSchema);
 const Request = mongoose.model('Request', requestSchema);
-const RequestProvider = mongoose.model('RequestProvider', requestProviderSchema);
+const RequestProvider = mongoose.model('requestproviderprueba', requestProviderSchema);
 const User = mongoose.model('User', userSchema);
 const UserPrueba = mongoose.model('userpruebas', userSchema);
 
