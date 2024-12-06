@@ -11,7 +11,7 @@ const AssistantList = ({ selectedService, handleProviderSelect }) => {
     console.log('Fetching assistants for location:', location, 'and task:', serviceName);
     try {
       const url = new URL('http://localhost:5001/users');
-      const params = { localidad: location, tarea: serviceName, userType: 'asistente' };
+      const params = { localidad: location, tarea: serviceName, userType: 'asistir' };
   
       Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
   

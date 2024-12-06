@@ -40,7 +40,7 @@ app.get('/users', async (req, res) => {
 
     // Construir el filtro
     const query = {
-      userType: 'asistente',
+      userType: 'asistir',
       'direccion.localidad': localidad,
       tareas: { $in: [tarea] },  // Buscando si la tarea está en el array 'tareas'
     };

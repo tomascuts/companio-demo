@@ -103,7 +103,7 @@ function App() {
         )}
           <div style={{ padding: '16px', flex: 1, overflow: 'auto',alignItems: 'center',
           justifyContent: 'center' }}>
-          {userRole === 'asistente' ? ( 
+          {userRole === 'asistir' ? ( 
             <RequestList requests={fetchRequests} setRequests={setRequests} />
             ) : (!selectedService && !selectedProvider) ? (
               <>

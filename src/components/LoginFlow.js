@@ -68,18 +68,10 @@ const LoginFlow = ({ onLogin }) => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    console.log(loginData); // Debug
     try {
+        console.log("Formulario usuario:", loginData)
         const response = await axios.post('http://localhost:5001/auth/login', loginData);
-
-        console.log('handleLoginSubmit');
-        console.log(response);
-
-        // Si la autenticación es exitosa
         const { userType, nombre } = response.data;
-
-        console.log(userType);
-
         onLogin({ userType });
         setStep(5);
 
@@ -118,8 +110,8 @@ const handleUserType = (type) => {
               calle: formData.direccion, 
               numero: 123,
           },
-          descripcion: formData.enfermedad,
-          tareas: [],
+          descripcion: formData.actividades,
+          tareas: formData.tareasAsistencia,
           userType: formData.userType,
           email: formData.email,
           contrasena: formData.contrasena,
@@ -128,7 +120,6 @@ const handleUserType = (type) => {
 
       const response = await axios.post('http://localhost:5001/register/Create/User', mapData);
       console.log(response.data);
-      //onLogin(formData.userType)
     }
     catch(error){
       console.error('Error al registrar usuario:', error.response?.data?.message || error.message);
@@ -139,7 +130,7 @@ const handleUserType = (type) => {
   useEffect(() => {
     if (step === 5) {
       const timer = setTimeout(() => {
-        //onLogin('asistido'); 
+        onLogin({userType: formData.userType}); 
       }, 4000);
 
       return () => clearTimeout(timer); 
