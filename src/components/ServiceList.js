@@ -54,12 +54,13 @@ const ServiceList = ({ filteredServices, handleServiceSelect }) => {
           </Typography>
         )
       ) : (
-        <List sx={{ marginTop: '16px' }}>
+        <List sx={{ marginTop: '16px'}}>
           {displayServices.map((service) => (
             <ServiceItem
               key={service.id}
               service={service}
               onClick={handleServiceSelect}
+              
             />
           ))}
         </List>

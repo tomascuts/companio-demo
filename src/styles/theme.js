@@ -11,7 +11,6 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'Arial, sans-serif',
-    fontSize: 15,
   },
 });
 

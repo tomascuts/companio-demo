@@ -47,7 +47,7 @@ const AssistantList = ({ selectedService, handleProviderSelect }) => {
   }, [selectedService]); // Solo se ejecuta cuando selectedService cambia
   
   return (
-    <div>
+    <div style={{border:"0.5px solid #953F39", borderRadius: "15px", backgroundColor:"#fff8f7", }}>
       {loading ? (
         <Typography variant="h6" color="text.primary">Loading...</Typography>
       ) : (
@@ -56,16 +56,21 @@ const AssistantList = ({ selectedService, handleProviderSelect }) => {
             assistants.map((assistant) => (
               <ListItem
                 key={assistant._id}
-                sx={{ backgroundColor: 'white', borderRadius: '10px', mb: 1 }}
+                sx={{ backgroundColor:"#fff8f7", borderRadius: '10px', mb: 1 }}
                 onClick={() => handleProviderSelect(assistant)}  // Aquí se maneja el clic
               >
-                <Avatar sx={{ mr: 2 }}>{assistant.nombre[0]}</Avatar>
+                <Avatar sx={{ mr: 2 ,fontWeight:"bold", color:"#953F39",backgroundColor:"#fff", border:"0.5px solid #953F39" ,width: 66, height: 66 }}>{assistant.nombre[0]}</Avatar>
                 <ListItemText 
-                  primary={assistant.nombre} 
+                
+                  primary={
+                    <Typography sx={{ fontWeight: "bold", fontSize: "20px", color: "#000" }}>
+                      {assistant.nombre}
+                    </Typography>}
+                  
                   secondary={
                     <>
-                      <Typography component="span" variant="body2" color="text.primary">
-                        {assistant.edad} años
+                      <Typography component="span" variant="body1" color="text.primary">
+                        {assistant.age} años
                       </Typography>
                       <br />
                       <Typography component="span" variant="body2" color="text.primary">
@@ -74,7 +79,7 @@ const AssistantList = ({ selectedService, handleProviderSelect }) => {
                     </>
                   } 
                 />
-                <Rating value={assistant.rating || 0} readOnly size="small" />
+                <Rating value={assistant.rating || 4} readOnly size="small" style={{}}/>
               </ListItem>
             ))
           ) : (

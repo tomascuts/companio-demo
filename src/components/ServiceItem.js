@@ -4,12 +4,12 @@ import StyledServiceItem from '../styles/StyledServiceItem';
 import { ShoppingCart, Wifi, Pets, Computer, People, Place } from '@mui/icons-material';
 
 const iconMap = {
-  ShoppingCart: <ShoppingCart />,
-  Wifi: <Wifi />,
-  Pets: <Pets />,
-  Computer: <Computer />,
-  People: <People />,
-  Place: <Place />,
+  ShoppingCart: <ShoppingCart sx={{color: "#953F39"}}/>,
+  Wifi: <Wifi sx={{color: "#953F39"}}/>,
+  Pets: <Pets sx={{color: "#953F39"}}/>,
+  Computer: <Computer sx={{color: "#953F39"}}/>,
+  People: <People sx={{color: "#953F39"}}/>,
+  Place: <Place sx={{color: "#953F39"}}/>,
 };
 
 const ServiceItem = ({ service, onClick }) => (
@@ -18,7 +18,7 @@ const ServiceItem = ({ service, onClick }) => (
     <ListItemText 
       primary={service.name} 
       secondary={service.description} 
-      sx={{ color: '#953F39', fontWeight: 400 }} 
+      sx={{ color: '#953F39', fontWeight: "bolder" ,fontSize: "15px"}}
     />
   </StyledServiceItem>
 );
