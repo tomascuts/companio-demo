@@ -23,6 +23,7 @@ function App() {
   const [selectedProvider, setSelectedProvider] = useState(null); //Maneja que Proveedor específico se está visualizando en pantalla
   const [fetchServices, setFetchServices] = useState(services); //Guarda los servicios obtenidos de la API
   const [fetchRequests, setRequests] = useState([]); //Guarda los pedidos obtenidos de la API
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -60,9 +61,10 @@ function App() {
 
   const handleLogin = (data) => {
     if (data && data.userType) {  // Verifica que data y userType no sean undefined o null
-      const { userType } = data;
+      const { userType, nombre } = data;
       setIsAuthenticated(true);
       setUserRole(userType || 'asistido');
+      setUserName(nombre);
     } else {
       // Si no hay un userType, asignar 'asistido' por defecto
       setIsAuthenticated(true);
@@ -104,7 +106,7 @@ function App() {
           <div style={{ padding: '16px', flex: 1, overflow: 'auto',alignItems: 'center',
           justifyContent: 'center' }}>
           {userRole === 'asistir' ? ( 
-            <RequestList requests={fetchRequests} setRequests={setRequests} />
+            <RequestList user={userName} requests={fetchRequests} setRequests={setRequests} />
             ) : (!selectedService && !selectedProvider) ? (
               <>
                 <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
@@ -121,7 +123,7 @@ function App() {
                 <ProviderList selectedService={selectedService} handleProviderSelect={handleProviderSelect} />
               </>
             ) : (
-              <DetailedViewProvider selectedProvider={selectedProvider}/>
+              <DetailedViewProvider userName={userName} selectedProvider={selectedProvider} selectedService={selectedService}/>
             )}          
           </div>
           <BottomNav value={value} setValue={setValue} />

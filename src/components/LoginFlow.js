@@ -58,7 +58,6 @@ const LoginFlow = ({ onLogin }) => {
 
   const handleLoginInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(`Actualizando ${name}:`, value); // Debug
     setLoginData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -73,7 +72,7 @@ const LoginFlow = ({ onLogin }) => {
         console.log("Formulario usuario:", loginData)
         const response = await axios.post('http://localhost:5001/auth/login', loginData);
         const { userType, nombre } = response.data;
-        onLogin({ userType });
+        onLogin({ userType, nombre });
         setStep(5);
 
         console.log(`Bienvenido, ${nombre}!`);

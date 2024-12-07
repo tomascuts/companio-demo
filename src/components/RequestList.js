@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { ShoppingCart, Pets, Wifi, People, Place, Computer } from '@mui/icons-material';
@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import RequestDetail from './RequestDetail';
 import axios from 'axios';
 
-const RequestList = ({ requests, setRequests }) => {
+const RequestList = ({ user, requests, setRequests }) => {
   const [selectedRequest, setSelectedRequest] = useState(null); // Request seleccionado
   const [selectedProviderId, setSelectedProviderId] = useState(null); // Estado para manejar el providerId seleccionado
   const [inProgress, setInProgress] = useState(null); // Bool para saber si hay un request en progreso
@@ -22,7 +22,7 @@ const RequestList = ({ requests, setRequests }) => {
     }
   };
 
-      // Agrupar los requests por proveedor y luego por estado
+  // Agrupar los requests por proveedor y luego por estado
   const groupedRequests = requests.map((requestProvider) => {
     const groupedByState = requestProvider.requests.reduce((acc, request) => {
       const state = request.state || 'Sin estado';
@@ -35,10 +35,12 @@ const RequestList = ({ requests, setRequests }) => {
 
     const hasInProgress = requestProvider.requests.some(request => request.state === 'In Progress');
 
-    return { providerName: requestProvider.providerName,
-             providerId: requestProvider.providerId, 
-             groupedByState,
-             inProgress: hasInProgress};
+    return {
+      providerName: requestProvider.providerName,
+      providerId: requestProvider.providerId,
+      groupedByState,
+      inProgress: hasInProgress
+    };
   });
 
 
@@ -70,60 +72,63 @@ const RequestList = ({ requests, setRequests }) => {
 
   return (
     <>
-    {selectedRequest ? (
-      <RequestDetail request={selectedRequest} providerId={selectedProviderId} stateInProgress={inProgress} onBack={handleBack} />
-    ) : (
-    <List>
-      {groupedRequests.map((provider) => (
-        <React.Fragment key={provider.providerName}>
-          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-            {provider.providerName}
-          </Typography>
-          {Object.keys(provider.groupedByState)
-            .filter((state) => stateOrder.includes(state)) // Filtrar solo los estados definidos
-            .sort((a, b) => {
-    const orderA = stateOrder.indexOf(a);
-    const orderB = stateOrder.indexOf(b);
-    return orderA - orderB;
-  }).map((state) => (
-            <React.Fragment key={state}>
-              <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
-                {state === 'Pending' ? 'Pendientes de responder' : state === 'Completed' ? 'Históricas' : state === 'In Progress' ? 'Activas' : state}
+      {selectedRequest ? (
+        <RequestDetail user={user} request={selectedRequest} providerId={selectedProviderId} stateInProgress={inProgress} onBack={handleBack} />
+      ) : (
+        <List>
+          {groupedRequests.map((provider) => (
+            <React.Fragment key={user}>
+              <Typography variant="h6" sx={{ mt: 2, mb: 1, textAlign: 'center' }}>
+                {'¡Hola ' + user + '!'}
               </Typography>
-              {provider.groupedByState[state].map((request, index) => (
-            <ListItem key={index}
-            button={state !== 'Completed'} // Hacer clicable solo si el estado no es "Completed"
-            onClick={() => {
-              if (state !== 'Completed') {
-                handleRequestSelect(request, provider.providerId, provider.inProgress);
-              }
-            }}
-          >
-              <ListItemIcon>
-              {getIcon(request.services)}
-              </ListItemIcon>
-              <ListItemText
-                primary={request.services}
-                secondary={
-                  <>
-                    <Typography component="span" variant="body2" color="text.primary">
-                      {request.assisted}
+              <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, textAlign: 'center' }}>
+                {'¿Estás listo para ayudar hoy?'}
+              </Typography>
+              {Object.keys(provider.groupedByState)
+                .filter((state) => stateOrder.includes(state)) // Filtrar solo los estados definidos
+                .sort((a, b) => {
+                  const orderA = stateOrder.indexOf(a);
+                  const orderB = stateOrder.indexOf(b);
+                  return orderA - orderB;
+                }).map((state) => (
+                  <React.Fragment key={state}>
+                    <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                      {state === 'Pending' ? 'Pendientes de responder' : state === 'Completed' ? 'Históricas' : state === 'In Progress' ? 'Activas' : state}
                     </Typography>
-                    <br />
-                    {request.date ? format(new Date(request.date), 'yyyy-MM-dd') : ''}
-                    <br />
-                    {request.paymentDescription ? request.paymentDescription : ''}
-                  </>
-                }
-              />
-            </ListItem>
+                    {provider.groupedByState[state].map((request, index) => (
+                      <ListItem key={index}
+                        button={state !== 'Completed'} // Hacer clicable solo si el estado no es "Completed"
+                        onClick={() => {
+                          if (state !== 'Completed') {
+                            handleRequestSelect(request, provider.providerId, provider.inProgress);
+                          }
+                        }}
+                      >
+                        <ListItemIcon>
+                          {getIcon(request.services)}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={request.services}
+                          secondary={
+                            <>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {request.assisted}
+                              </Typography>
+                              <br />
+                              {request.date ? format(new Date(request.date), 'yyyy-MM-dd') : ''}
+                              <br />
+                              {request.paymentDescription ? request.paymentDescription : ''}
+                            </>
+                          }
+                        />
+                      </ListItem>
+                    ))}
+                  </React.Fragment>
+                ))}
+            </React.Fragment>
           ))}
-        </React.Fragment>
-                  ))}
-        </React.Fragment>
-      ))}
-    </List>
-    )}
+        </List>
+      )}
     </>
   );
 };

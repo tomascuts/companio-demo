@@ -118,7 +118,8 @@ const userSchema = new mongoose.Schema({
 const Service = mongoose.model('Service', serviceSchema);
 const Provider = mongoose.model('Provider', providerSchema);
 const Request = mongoose.model('Request', requestSchema);
-const RequestProvider = mongoose.model('requestproviderprueba', requestProviderSchema);
+const RequestProvider = mongoose.model('requestprovider', requestProviderSchema);
+const RequestProviderPrueba = mongoose.model('requestproviderpruebas', requestProviderSchema);
 const User = mongoose.model('User', userSchema);
 const UserPrueba = mongoose.model('userpruebas', userSchema);
 
@@ -127,6 +128,7 @@ module.exports = {
     Provider,
     Request,
     RequestProvider,
+    RequestProviderPrueba,
     User,
     UserPrueba
 };

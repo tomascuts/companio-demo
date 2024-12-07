@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, List, ListItem, Avatar, Rating, Button, Chip, Box, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material'; import { ShoppingCart, Wifi, Pets, Computer, People, Place, Close as CloseIcon } from '@mui/icons-material';
 import PaymentPopup from './PaymentPopUp';
+import axios from 'axios'
 
 // Función para obtener el ícono correspondiente al servicio
 const getServiceIcon = (serviceName) => {
@@ -22,7 +23,7 @@ const getServiceIcon = (serviceName) => {
   }
 };
 
-const DetailedViewProvider = ({ selectedProvider }) => {
+const DetailedViewProvider = ({userName, selectedProvider, selectedService }) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [showConfirmationScreen, setShowConfirmationScreen] = useState(false);
   const [paymentPopupOpen, setPaymentPopupOpen] = useState(false);
@@ -39,11 +40,27 @@ const DetailedViewProvider = ({ selectedProvider }) => {
     setOpenPopup(false);
   };
 
-  const handleAccept = () => {
+  const handleAccept = async () => {
     setOpenPopup(false);
     setShowConfirmationScreen(true);
-    // Aquí puedes añadir la navegación a la próxima pantalla.
-    // Ejemplo: navigate("/next-screen");
+
+    const request = {
+
+      services: selectedService.name,
+      assisted: userName,
+      date: new Date().toISOString().split("T")[0],
+      state: "Pending",
+      paymentDescription: "",
+      description: selectedService.description,
+      amountPayment: Math.floor(0.65 * (5000 - 1000 + 1)) + 1000,
+      requestId: 6,
+      age: "73 años",
+      location: selectedProvider.direccion.localidad,
+    };
+
+    //Por defecto siempre agregamos en el providerId = 3.
+    const response = await axios.post('http://localhost:5001/request/providers/add/3', request);
+    console.log(response.data);
   };
 
   const handleBack = () => {

@@ -3,7 +3,7 @@ import { Box, Typography, Button, Avatar, Dialog, DialogTitle, DialogContent, Di
 import axios from 'axios';
 import { ArrowBack } from '@mui/icons-material';
 
-const RequestDetail = ({ request, providerId, stateInProgress, onBack }) => {
+const RequestDetail = ({ user, request, providerId, stateInProgress, onBack }) => {
   const [openDialog, setOpenDialog] = useState(false); // Estado para manejar la visibilidad del diálogo
   
   const stateOrder = ['In Progress', 'Pending', 'Completed'];

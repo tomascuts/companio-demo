@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const {Service, Provider, Request, RequestProvider, User, UserPrueba } = require('./models');
+const {Service, Provider, Request, RequestProvider,RequestProviderPrueba, User, UserPrueba } = require('./models');
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -171,7 +171,7 @@ try {
 app.get('/requests', async (req, res) => {
 try {
     console.log('/requests');
-    const requests = await RequestProvider.find();
+    const requests = await RequestProviderPrueba.find();
     console.log("Data from MongoDB:", requests); // Verifica qué devuelve MongoDB.
     res.json(requests);
 } catch (err) {
@@ -239,5 +239,29 @@ app.post('/register/Create/User', async (req, res) => {
   } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Ocurrio un error al intentar registrar al usuario.' });
+  }
+});
+
+app.post('/request/providers/add/:providerId', async (req, res) => {
+
+  console.log('/request/providers/add | providerId: ' + req.params.providerId +  'y req: ', req.body);
+  const collection = mongoose.connection.db.collection('requestproviderpruebas');
+
+  try {
+    const result  = await collection.findOneAndUpdate(
+      { providerId: parseInt(req.params.providerId) },
+      { $push: { requests: req.body } },
+      { new: true }
+    );
+    
+    if (result) {
+      res.status(200).json({ message: 'Solicitud agregada exitosamente', data: result });
+    } else {
+      res.status(404).json({ message: 'No se encontro el Provider para agregar mi nueva solicitud' });
+    }
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al agregar nueva solicitud', error });
   }
 });
