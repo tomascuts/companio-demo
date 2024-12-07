@@ -81,12 +81,12 @@ const RequestDetail = ({ user, request, providerId, stateInProgress, onBack }) =
           <Box display="flex" alignItems="center" gap="16px">
         <Avatar
           src="/path-to-avatar.jpg" // Aquí puedes usar la imagen de un avatar real
-          alt="Ricardo Rodríguez"
+          alt={request.assisted.toUpperCase()}
           sx={{ width: 64, height: 64 }}
         />
         <Box>
           <Typography variant="h6" color="text.primary">
-            {request.assisted}
+            {request.assisted.toUpperCase()}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {request.location}
@@ -124,7 +124,7 @@ const RequestDetail = ({ user, request, providerId, stateInProgress, onBack }) =
           variant="contained"
           color="success"
           fullWidth
-          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center', mb: 2 }}
           disabled={stateInProgress}
           onClick={handleAcceptRequest}
         >
@@ -136,7 +136,7 @@ const RequestDetail = ({ user, request, providerId, stateInProgress, onBack }) =
           variant="contained"
           color="error"
           fullWidth
-          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center', mb: 2 }}
           onClick={handleRejectRequest}
         >
           Rechazar solicitud
@@ -147,7 +147,7 @@ const RequestDetail = ({ user, request, providerId, stateInProgress, onBack }) =
           variant="contained"
           color="success"
           fullWidth
-          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center', mb: 2 }}
         >
           Ir al chat
         </Button>
@@ -157,7 +157,7 @@ const RequestDetail = ({ user, request, providerId, stateInProgress, onBack }) =
           variant="contained"
           color="error"
           fullWidth
-          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center' }}
+          sx={{ textTransform: 'none', width: '155px', alignSelf: 'center', mb: 2 }}
           onClick={() => setOpenDialog(true)}
         >
           Terminar servicio

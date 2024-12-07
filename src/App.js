@@ -99,7 +99,7 @@ function App() {
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column'}}>
           <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
           {selectedService && (
-          <Typography variant="h6" sx={{ padding: '16px', textAlign: 'center', color: "#953F39", fontWeight: 700 }}>
+          <Typography variant="h6" sx={{ padding: '16px', textAlign: 'center', color: "#953F39", fontWeight: 700,fontSize: "30px" }}>
             {selectedService.name} {/* Título del servicio seleccionado */}
           </Typography>
         )}
