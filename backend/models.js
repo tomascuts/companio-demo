@@ -69,6 +69,10 @@ const requestSchema = new mongoose.Schema({
   requestId: {
     type: Number,
     required: true
+  },
+  provider:{
+    type: String,
+    required: false
   }
 });
 

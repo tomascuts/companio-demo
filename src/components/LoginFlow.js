@@ -131,10 +131,10 @@ const handleUserType = (type) => {
   useEffect(() => {
     if (step === 5) {
       const timer = setTimeout(() => {
-        onLogin({userType: formData.userType}); 
+        window.location.reload();
       }, 4000);
 
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [step, onLogin]);
 

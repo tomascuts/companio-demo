@@ -53,9 +53,10 @@ const DetailedViewProvider = ({userName, selectedProvider, selectedService }) =>
       paymentDescription: "",
       description: selectedService.description,
       amountPayment: Math.floor(0.65 * (5000 - 1000 + 1)) + 1000,
-      requestId: 6,
+      requestId: Math.floor(Math.random() * 10000) + 1,
       age: "73 años",
       location: selectedProvider.direccion.localidad,
+      provider: selectedProvider.nombre
     };
 
     //Por defecto siempre agregamos en el providerId = 3.

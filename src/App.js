@@ -129,7 +129,7 @@ function App() {
           <BottomNav value={value} setValue={setValue} />
         </div>
       ) : (
-        <LoginFlow onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
+        <LoginFlow onLogin={handleLogin}/>  // Muestra LoginScreen si no ha iniciado sesión
       )}
     </ThemeProvider>
   );

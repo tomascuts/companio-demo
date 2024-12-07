@@ -16,6 +16,7 @@ const RequestList = ({ user, requests, setRequests }) => {
   const fetchRequests = async () => {
     try {
       const response = await axios.get('http://localhost:5001/requests');
+
       setRequests(response.data);
     } catch (error) {
       console.error('Error fetching requests:', error);
@@ -24,7 +25,11 @@ const RequestList = ({ user, requests, setRequests }) => {
 
   // Agrupar los requests por proveedor y luego por estado
   const groupedRequests = requests.map((requestProvider) => {
-    const groupedByState = requestProvider.requests.reduce((acc, request) => {
+    // Filtrar requests según el campo 'providers' que coincida con 'user'
+    const filteredRequests = requestProvider.requests.filter(request => request.provider === user);
+  
+    // Agrupar las requests filtradas por estado
+    const groupedByState = filteredRequests.reduce((acc, request) => {
       const state = request.state || 'Sin estado';
       if (!acc[state]) {
         acc[state] = [];
@@ -32,9 +37,10 @@ const RequestList = ({ user, requests, setRequests }) => {
       acc[state].push(request);
       return acc;
     }, {});
-
-    const hasInProgress = requestProvider.requests.some(request => request.state === 'In Progress');
-
+  
+    // Verificar si hay alguna request "In Progress" en las filtradas
+    const hasInProgress = filteredRequests.some(request => request.state === 'In Progress');
+  
     return {
       providerName: requestProvider.providerName,
       providerId: requestProvider.providerId,

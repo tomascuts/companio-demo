@@ -84,7 +84,7 @@ try {
   console.log('/requests/:providerId' , req); 
   const { providerId } = req.params;
 
-  const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
+  const provider = await RequestProviderPrueba.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
   if (!provider) {
     return res.status(404).json({ message: 'Proveedor no encontrado' });
@@ -102,7 +102,7 @@ try {
   console.log('/requests/:providerId/requests | req: ', req)
   const { providerId } = req.params;
 
-  const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
+  const provider = await RequestProviderPrueba.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
   if (!provider) {
     return res.status(404).json({ message: 'Proveedor no encontrado' });
@@ -120,7 +120,7 @@ try {
   console.log('/requests/:providerId/request/:requestId req: ', req);
   const { providerId, requestId } = req.params;
 
-  const provider = await RequestProvider.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
+  const provider = await RequestProviderPrueba.findOne({ providerId: parseInt(providerId, 10) }).populate('requests');
 
   if (!provider) {
     return res.status(404).json({ message: 'Proveedor no encontrado' });
@@ -148,7 +148,7 @@ try {
   const { state } = req.body;
 
   // Actualiza el estado del request en el subdocumento
-  const provider = await RequestProvider.findOneAndUpdate(
+  const provider = await RequestProviderPrueba.findOneAndUpdate(
     { providerId: parseInt(providerId, 10), 'requests.requestId': parseInt(requestId, 10) },
     { $set: { 'requests.$.state': state } }, // Actualiza solo el campo `state`
     { new: true, runValidators: true } // Devuelve el documento actualizado y valida los cambios
@@ -171,6 +171,7 @@ try {
 app.get('/requests', async (req, res) => {
 try {
     console.log('/requests');
+
     const requests = await RequestProviderPrueba.find();
     console.log("Data from MongoDB:", requests); // Verifica qué devuelve MongoDB.
     res.json(requests);
