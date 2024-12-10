@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { CssBaseline, ThemeProvider, Typography } from '@mui/material';
 import Header from './components/Header';
 import SearchBar from './components/SearchBar';
@@ -9,82 +10,107 @@ import DetailedViewProvider from './components/DetailedViewProvider';
 import LoginFlow from './components/LoginFlow';
 
 import theme from './styles/theme';
-import { services } from './data/servicesData';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [value, setValue] = useState(1);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredServices, setFilteredServices] = useState(services);
-  const [selectedService, setSelectedService] = useState(null);
-  const [selectedProvider, setSelectedProvider] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Controla si el Usuario ha iniciado sesión
+  const [value, setValue] = useState(1); // Indica la pestaña seleccionada en la navegación inferior (BottomNav)
+  const [searchTerm, setSearchTerm] = useState(''); // Guarda el término de búsqueda
+  const [services, setServices] = useState([]); // Guarda los servicios obtenidos de la API
+  const [filteredServices, setFilteredServices] = useState([]); // Guarda los servicios filtrados
+  const [selectedService, setSelectedService] = useState(null); // Guarda el servicio seleccionado
+  const [selectedProvider, setSelectedProvider] = useState(null); // Guarda el proveedor seleccionado
 
+
+
+  // Filtra los servicios cuando cambia el término de búsqueda
   useEffect(() => {
     const results = services.filter(service =>
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       service.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredServices(results);
-  }, [searchTerm]);
+    setFilteredServices(results); // Actualiza los servicios filtrados
+  }, [searchTerm, services]);
 
   const handleLogin = () => {
-    setIsAuthenticated(true);
+    setIsAuthenticated(true); // Activa la autenticación
   };
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    setSearchTerm(event.target.value); // Actualiza el término de búsqueda
   };
 
   const handleServiceSelect = (service) => {
-    console.log('Selected Service:', service);
-    setSelectedService(service);
+    setSelectedService(service); // Guarda el servicio seleccionado
   };
 
   const handleBackClick = () => {
     if (selectedProvider) {
-      setSelectedProvider(null);
+      setSelectedProvider(null); // Vuelve al servicio seleccionado
     } else if (selectedService) {
-      setSelectedService(null);
+      setSelectedService(null); // Vuelve a la lista de servicios
     }
   };
-  
-  const handleProviderSelect = (provider) => {
-    setSelectedProvider(provider);
-  };
 
+  const handleProviderSelect = (provider) => {
+    setSelectedProvider(provider); // Guarda el proveedor seleccionado
+  };
+  
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {isAuthenticated ? (
-        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-          <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
-          <div style={{ padding: '16px', flex: 1, overflow: 'auto' }}>
-            {!selectedService && !selectedProvider ? (
-              <>
-                <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
-                <ServiceList filteredServices={filteredServices} handleServiceSelect={handleServiceSelect} />
-              </>
-            ) : selectedService && !selectedProvider ? (
-              <>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                  {selectedService.detailedDescription}
-                </Typography>
-                <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                  Resultados de asistentes cerca de su zona
-                </Typography>
-                <ProviderList providers={selectedService.providers} handleProviderSelect={handleProviderSelect} />
-              </>
-            ) : (
-              <DetailedViewProvider selectedProvider={selectedProvider}/>
-            )}          
-          </div>
-          <BottomNav value={value} setValue={setValue} />
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header selectedService={selectedService} selectedProvider={selectedProvider} handleBackClick={handleBackClick} />
+        <div style={{ padding: '16px', flex: 1, overflow: 'auto' }}>
+          {!selectedService && !selectedProvider ? (
+            <>
+              <SearchBar searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
+              <ServiceList filteredServices={filteredServices} handleServiceSelect={handleServiceSelect} />
+            </>
+          ) : selectedService && !selectedProvider ? (
+            <>
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                {selectedService.detailedDescription}
+              </Typography>
+              <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                Resultados de asistentes cerca de su zona
+              </Typography>
+              <ProviderList selectedService={selectedService} handleProviderSelect={handleProviderSelect} />
+            </>
+          ) : (
+            <DetailedViewProvider selectedProvider={selectedProvider} />
+          )}
         </div>
-      ) : (
-        <LoginFlow onLogin={handleLogin} />  // Muestra LoginScreen si no ha iniciado sesión
-      )}
+        <BottomNav value={value} setValue={setValue} />
+      </div>
     </ThemeProvider>
   );
+  
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
