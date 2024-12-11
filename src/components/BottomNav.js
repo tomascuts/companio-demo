@@ -11,9 +11,9 @@ const BottomNav = ({ value, setValue }) => {
       showLabels
       sx={{ backgroundColor: theme => theme.palette.primary.main }}
     >
-      <BottomNavigationAction label="Mis solicitudes" icon={<ListIcon />} />
-      <BottomNavigationAction label="Home" icon={<Home />} />
-      <BottomNavigationAction label="Favoritos" icon={<Favorite />} />
+      <BottomNavigationAction label="Mis solicitudes" icon={<ListIcon sx={{color:"black"}}/>} />
+      <BottomNavigationAction label="Home" icon={<Home sx={{color:"black"}}/>} />
+      <BottomNavigationAction label="Favoritos" icon={<Favorite sx={{color:"black"}}/>} />
     </BottomNavigation>
   );
 };
