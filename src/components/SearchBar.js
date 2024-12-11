@@ -21,7 +21,8 @@ const SearchBar = ({ searchTerm, handleSearchChange }) => {
     <StyledPaper sx={{backgroundColor: "#E0877F", display:"flex",flexDirection: "row-reverse", boxShadow: "0 5px 15px 2px rgb(93,93,93)"}}>
       <Search />
       <StyledInputBase
-        placeholder="Busca por servicio o persona"
+        //placeholder="Busca por servicio o persona"
+        placeholder="Busca por servicio"
         inputProps={{ 'aria-label': 'search' }}
         value={searchTerm}
         onChange={handleSearchChange}
