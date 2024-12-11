@@ -1,5 +1,3 @@
-// src/components/LoginInfoForm.js
-
 import React from 'react';
 import { Box, Typography, TextField, Button, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Checkbox, IconButton } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
@@ -123,12 +121,12 @@ export default function LoginInfoForm({ formData, handleInputChange, handleSubmi
               <FormLabel component="legend">¿En qué tareas te gustaría brindar asistencia?</FormLabel>
               <Box>
                 {[
-                  { id: 'acompanamiento', label: 'Acompañamiento' },
-                  { id: 'ayuda_compras', label: 'Ayuda con las compras' },
-                  { id: 'tramites_online', label: 'Trámites online' },
-                  { id: 'tramites_presenciales', label: 'Trámites presenciales' },
-                  { id: 'pasear_perro', label: 'Pasear a la mascota' },
-                  { id: 'ayuda_tecnologia', label: 'Ayuda con la tecnología' },
+                  { id: 'Acompañamiento', label: 'Acompañamiento' },
+                  { id: 'Ayuda con las compras', label: 'Ayuda con las compras' },
+                  { id: 'Trámites online', label: 'Trámites online' },
+                  { id: 'Trámites presenciales', label: 'Trámites presenciales' },
+                  { id: 'Mascotas', label: 'Pasear a la mascota' },
+                  { id: 'Tecnología', label: 'Ayuda con la tecnología' },
                 ].map((task) => (
                   <FormControlLabel
                     key={task.id}

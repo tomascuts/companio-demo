@@ -6,6 +6,7 @@ import LoginUserTypeSelection from './LoginUserTypeSelection.js'
 import LoginInfoForm from './LoginInfoForm.js'
 import LoginSuccessScreen from './LoginSuccessScreen.js'
 import axios from 'axios'
+import { randomReviews } from '../data/reviewsData.js';
 
 const theme = createTheme({
   palette: {
@@ -17,7 +18,7 @@ const theme = createTheme({
     },
   },
 });
-//holaaa
+
 const LoginFlow = ({ onLogin }) => {
   const [step, setStep] = useState(1)
   const [isLogin, setIsLogin] = useState(false)
@@ -43,6 +44,7 @@ const LoginFlow = ({ onLogin }) => {
   })
   const [userName, setUserName] = useState('')
   const [userType, setUserType] = useState('asistido');
+  //onLogin.userType
 
   const handleInputChange = (e) => { // Actualiza el estado de formData a medida que el usuario escribe en los campos del formulario. Si el campo es nombre, también actualiza el estado userName.
     setFormData({
@@ -56,7 +58,6 @@ const LoginFlow = ({ onLogin }) => {
 
   const handleLoginInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(`Actualizando ${name}:`, value); // Debug
     setLoginData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -67,13 +68,11 @@ const LoginFlow = ({ onLogin }) => {
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    console.log(loginData); // Debug
     try {
+        console.log("Formulario usuario:", loginData)
         const response = await axios.post('http://localhost:5001/auth/login', loginData);
-
-        // Si la autenticación es exitosa
         const { userType, nombre } = response.data;
-        onLogin({ userType });
+        onLogin({ userType, nombre });
         setStep(5);
 
         console.log(`Bienvenido, ${nombre}!`);
@@ -98,18 +97,44 @@ const handleUserType = (type) => {
     setStep(4)
   }
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     console.log('Form submitted:', formData)
+
+    try
+    {
+        const mapData = {
+          nombre: formData.nombre,
+          fecha_nacimiento: new Date(formData.fechaNacimiento),
+          direccion: {
+              localidad: formData.localidad,
+              calle: formData.direccion, 
+              numero: Math.floor(Math.random() * (1000 - 100 + 1)) + 100,
+          },
+          descripcion: formData.actividades,
+          tareas: formData.tareasAsistencia,
+          userType: formData.userType,
+          email: formData.email,
+          contrasena: formData.contrasena,
+          reviews: randomReviews, 
+          rating: ((Math.random() * (5 - 3.5) + 3.5).toFixed(2)).toString()
+      };
+
+      const response = await axios.post('http://localhost:5001/register/Create/User', mapData);
+      console.log(response.data);
+    }
+    catch(error){
+      console.error('Error al registrar usuario:', error.response?.data?.message || error.message);
+    }
     setStep(5)
   }
 
   useEffect(() => {
     if (step === 5) {
       const timer = setTimeout(() => {
-        onLogin('asistido'); 
+        window.location.reload();
       }, 4000);
 
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [step, onLogin]);
 
